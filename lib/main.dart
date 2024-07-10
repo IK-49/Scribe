@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'login.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(MainApp());
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  MainApp({Key? key}) : super(key: key); // Constructor corrected
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return MaterialApp(
+      title: "Writing Feed App",
+      home: LoginPage(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        appBarTheme: AppBarTheme(color: Colors.cyan),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
     );
   }
