@@ -26,13 +26,16 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  
   void click() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Align(alignment: Alignment.center, child: ElevatedButton(child: const Text("placeholder for google login"), onPressed: click));
+    return Align(
+        alignment: Alignment.center,
+        child: ElevatedButton(
+            child: const Text("placeholder for google login"),
+            onPressed: click));
   }
 }

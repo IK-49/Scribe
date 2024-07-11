@@ -1,0 +1,23 @@
+[
+    {
+      "comment": "this is just the test json file i used. ill delete it after we user the server",
+      "user": "Aakash",
+      "title": "Battlefield 2042",
+      "preview": "hi im aakash i love fortnite"
+    },
+    {
+      "user": "Nathan Manoj Jacob",
+      "title": "A Day in the Life of Nathan Manoj Jacob",
+      "preview": "Today, I want to share a day in my life..."
+    },
+    {
+      "user": "Aarik",
+      "title": "how to backend",
+      "preview": "step 1: http request, step 2: cry"
+    },
+    {
+      "user": "Izad",
+      "title": "The rise of the broken sigma (me)",
+      "preview": "how i became a sigma cool"
+    }
+]
