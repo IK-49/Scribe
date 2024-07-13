@@ -4,7 +4,7 @@ class Post {
   final String preview;
 
   Post({
-    required this.user,       
+    required this.user,
     required this.title,
     required this.preview,
   });

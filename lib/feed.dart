@@ -70,6 +70,7 @@ class _FeedState extends State<Feed> {
       ),
       body: Column(
         children: <Widget>[
+          // add debug button widget to refresh all stateful widgets
           Align(alignment: Alignment.center, child: Text(feed)),
           ElevatedButton(
             onPressed: () async {
@@ -86,7 +87,7 @@ class _FeedState extends State<Feed> {
             child: const Text("Click to reveal todays prompt."),
           ),
           Expanded(
-              //TODO: Add a refresh posts button as right now the list only updates after logging in 
+              //TODO: Add a refresh posts button as right now the list only updates after logging in
               child: ListView.builder(
                   itemCount: posts.length,
                   itemBuilder: (context, index) {

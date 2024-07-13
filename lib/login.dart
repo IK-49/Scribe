@@ -27,7 +27,8 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   void click() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Feed()));
   }
 
   @override
