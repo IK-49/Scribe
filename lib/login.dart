@@ -37,6 +37,9 @@ class _BodyState extends State<Body> {
         alignment: Alignment.center,
         child: ElevatedButton(
             child: const Text("placeholder for google login"),
-            onPressed: click));
+            onPressed: () {
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => Feed()));
+            }));
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'post.dart';
+import 'new_post.dart';
 
 class Feed extends StatefulWidget {
   const Feed({super.key});
@@ -56,6 +57,8 @@ class _FeedState extends State<Feed> {
     } */
   }
 
+  void click() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,6 +105,18 @@ class _FeedState extends State<Feed> {
                               child: Text(post.user[0].toUpperCase()),
                             )));
                   })),
+          Align(
+              alignment: Alignment.bottomRight,
+              child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  width: MediaQuery.of(context).size.height * 0.15,
+                  child: FittedBox(
+                      child: IconButton(
+                        icon: Icon(Icons.add_circle_outline),
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => NewPost()));
+                        },
+                  )))),
         ],
       ),
     );
