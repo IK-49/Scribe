@@ -14,6 +14,7 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   String feed = '';
   List<Post> posts = [];
+  String selectedFilter = 'Recent'; // Default filter option
 
   @override
   void initState() {
@@ -88,6 +89,22 @@ class _FeedState extends State<Feed> {
               });
             },
             child: const Text("Click to reveal todays prompt."),
+          ),
+          DropdownButton<String>(
+            value: selectedFilter,
+            items: <String>['Recent', 'Hot', 'Old'].map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedFilter = newValue!;
+              });
+              print('Current filter: $selectedFilter');
+              // Add logic here to sort/filter posts based on selectedFilter
+            },
           ),
           Expanded(
               //TODO: Add a refresh posts button as right now the list only updates after logging in
