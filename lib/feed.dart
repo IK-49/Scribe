@@ -79,13 +79,14 @@ class _FeedState extends State<Feed> {
           ElevatedButton(
             onPressed: () async {
               print("button pressed");
-              // we need error handling here if the client doesn't connect with the server
-              final response =
-                  await http.get(Uri.parse("http://127.0.0.1:5000/pick"));
-              final decoded =
-                  json.decode(response.body) as Map<String, dynamic>;
+              
+              final response = await http.get(Uri.parse('https://aarikg.pythonanywhere.com/pick'));
+              print("1");
+              Map json = jsonDecode(response.body);
+              print("1");
+              print(response.body);
               setState(() {
-                feed = decoded['todaysPick'];
+                feed = json['todaysPick'];
               });
             },
             child: const Text("Click to reveal todays prompt."),
