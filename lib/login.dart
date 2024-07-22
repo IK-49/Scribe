@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildSignInWithText() {
+  Widget _buildSignUpWithText() {
     return Column(
       children: <Widget>[
         Text(
@@ -244,6 +244,18 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -296,7 +308,7 @@ class _LoginPageState extends State<LoginPage> {
                       _buildForgotPasswordBtn(),
                       _buildRememberMeCheckbox(),
                       _buildLoginBtn(),
-                      _buildSignInWithText(),
+                      _buildSignUpWithText(),
                       _buildSocialBtnRow(),
                       _buildSignupBtn(),
                     ],

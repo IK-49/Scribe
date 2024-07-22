@@ -26,4 +26,5 @@ flutter:
   assets:
     - assets/google.png
     - assets/facebook.png
-    - assets/writing.mp4
+    - assets/background.jpg
+    - assets/background2.jpg

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:writing_feed_app/login.dart';
+import 'package:writing_feed_app/sign_up.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -12,7 +14,10 @@ class _LandingPageState extends State<LandingPage> {
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: MediaQuery.of(context).size.width * 0.75,
       child: ElevatedButton(
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => LoginPage()));
+        },
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           padding: EdgeInsets.all(15.0),
@@ -39,7 +44,10 @@ class _LandingPageState extends State<LandingPage> {
       padding: EdgeInsets.symmetric(vertical: 0.0),
       width: MediaQuery.of(context).size.width * 0.75,
       child: ElevatedButton(
-        onPressed: () => print('Sign Up Button Pressed'),
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => SignUp()));
+        },
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           padding: EdgeInsets.all(15.0),
@@ -74,6 +82,11 @@ class _LandingPageState extends State<LandingPage> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
+                  /*image: DecorationImage(
+                    image: AssetImage("assets/background2.jpg"),
+                    fit: BoxFit.cover,
+                  ),*/
+
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -112,10 +125,14 @@ class _LandingPageState extends State<LandingPage> {
                           fontSize: 18.0,
                         ),
                       ),
-                      SizedBox(height: 10.0), // Space between the text and the button
+                      SizedBox(
+                          height:
+                              10.0), // Space between the text and the button
                       _buildLoginBtn(),
                       _buildSignupBtn(),
-                      SizedBox(height: 50.0), // Space between the buttons and the bottom
+                      SizedBox(
+                          height:
+                              50.0), // Space between the buttons and the bottom
                     ],
                   ),
                 ),

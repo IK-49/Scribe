@@ -8,8 +8,6 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  bool _rememberMe = false;
-
   Widget _buildEmailTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,52 +78,47 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget _buildForgotPasswordBtn() {
-    return Container(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () => print('Forgot Password Button Pressed'),
-        child: Text(
-          'Forgot Password?',
+  Widget _buildConfirmPasswordTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Confirm Password',
           style: kLabelStyle,
         ),
-      ),
-    );
-  }
-
-  Widget _buildRememberMeCheckbox() {
-    return Container(
-      height: 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.green,
-              activeColor: Colors.white,
-              onChanged: (value) {
-                setState(() {
-                  _rememberMe = value!;
-                });
-              },
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 60.0,
+          child: TextField(
+            obscureText: true,
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.lock,
+                color: Colors.white,
+              ),
+              hintText: 'Confirm your Password',
+              hintStyle: kHintTextStyle,
             ),
           ),
-          Text(
-            'Remember me',
-            style: kLabelStyle,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildLoginBtn() {
+  Widget _buildSignupBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () => print('Sign Up Button Pressed'),
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           padding: EdgeInsets.all(15.0),
@@ -134,7 +127,7 @@ class _SignUpState extends State<SignUp> {
           ),
         ),
         child: Text(
-          'LOGIN',
+          'SIGN UP',
           style: TextStyle(
             color: Color(0xFF527DAA),
             letterSpacing: 1.5,
@@ -147,7 +140,7 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget _buildSignInWithText() {
+  Widget _buildSignUpWithText() {
     return Column(
       children: <Widget>[
         Text(
@@ -159,7 +152,7 @@ class _SignUpState extends State<SignUp> {
         ),
         SizedBox(height: 20.0),
         Text(
-          'Sign in with',
+          'Sign up with',
           style: kLabelStyle,
         ),
       ],
@@ -197,13 +190,13 @@ class _SignUpState extends State<SignUp> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           _buildSocialBtn(
-            () => print('Login with Facebook'),
+            () => print('Sign Up with Facebook'),
             AssetImage(
               'assets/facebook.png',
             ),
           ),
           _buildSocialBtn(
-            () => print('Login with Google'),
+            () => print('Sign Up with Google'),
             AssetImage(
               'assets/google.png',
             ),
@@ -213,14 +206,14 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget _buildSignupBtn() {
+  Widget _buildSignInBtn() {
     return GestureDetector(
-      onTap: () => print('Sign Up Button Pressed'),
+      onTap: () => print('Sign In Button Pressed'),
       child: RichText(
         text: TextSpan(
           children: [
             TextSpan(
-              text: 'Don\'t have an Account? ',
+              text: 'Already have an Account? ',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,
@@ -228,7 +221,7 @@ class _SignUpState extends State<SignUp> {
               ),
             ),
             TextSpan(
-              text: 'Sign Up',
+              text: 'Sign In',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18.0,
@@ -244,6 +237,18 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -279,7 +284,7 @@ class _SignUpState extends State<SignUp> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Sign In',
+                        'Sign Up',
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'OpenSans',
@@ -289,16 +294,15 @@ class _SignUpState extends State<SignUp> {
                       ),
                       SizedBox(height: 30.0),
                       _buildEmailTF(),
-                      SizedBox(
-                        height: 30.0,
-                      ),
+                      SizedBox(height: 30.0),
                       _buildPasswordTF(),
-                      _buildForgotPasswordBtn(),
-                      _buildRememberMeCheckbox(),
-                      _buildLoginBtn(),
-                      _buildSignInWithText(),
-                      _buildSocialBtnRow(),
+                      SizedBox(height: 30.0),
+                      _buildConfirmPasswordTF(),
+                      SizedBox(height: 30.0),
                       _buildSignupBtn(),
+                      _buildSignUpWithText(),
+                      _buildSocialBtnRow(),
+                      _buildSignInBtn(),
                     ],
                   ),
                 ),
