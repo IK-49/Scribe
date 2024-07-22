@@ -58,8 +58,6 @@ class _FeedState extends State<Feed> {
     } */
   }
 
-  void click() {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,8 +77,9 @@ class _FeedState extends State<Feed> {
           ElevatedButton(
             onPressed: () async {
               print("button pressed");
-              
-              final response = await http.get(Uri.parse('https://aarikg.pythonanywhere.com/pick'));
+
+              final response = await http
+                  .get(Uri.parse('https://aarikg.pythonanywhere.com/pick'));
               print("1");
               Map json = jsonDecode(response.body);
               print("1");
@@ -130,10 +129,11 @@ class _FeedState extends State<Feed> {
                   width: MediaQuery.of(context).size.height * 0.15,
                   child: FittedBox(
                       child: IconButton(
-                        icon: Icon(Icons.add_circle_outline),
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => NewPost()));
-                        },
+                    icon: Icon(Icons.add_circle_outline),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => NewPost()));
+                    },
                   )))),
         ],
       ),

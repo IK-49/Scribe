@@ -1,9 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:writing_feed_app/landing_page.dart';
 import 'login.dart';
-import 'package:http/http.dart' as http;
-import "dart:convert";
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MainApp());
 }
 
@@ -14,7 +19,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Writing Feed App",
-      home: LoginPage(),
+      home: LandingPage(),
       theme: ThemeData(
         primarySwatch: Colors.blue,
         appBarTheme: AppBarTheme(color: Colors.cyan),

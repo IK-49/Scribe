@@ -7,9 +7,14 @@ environment:
   sdk: '>=3.4.3 <4.0.0'
 
 dependencies:
+  curved_navigation_bar: ^1.0.6
+  firebase_core: ^2.24.2
   flutter:
     sdk: flutter
+  flutter_floating_bottom_bar: ^1.2.0
+  get: ^4.6.6
   http: ^1.2.1
+  video_player: ^2.9.1
 
 dev_dependencies:
   flutter_test:
@@ -18,3 +23,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/google.png
+    - assets/facebook.png
+    - assets/writing.mp4
