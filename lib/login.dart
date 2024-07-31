@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,6 +10,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _rememberMe = false;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   Widget _buildEmailTF() {
     return Column(
@@ -24,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
+            controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.white,
@@ -59,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
+            controller: _passwordController,
             obscureText: true,
             style: TextStyle(
               color: Colors.white,
@@ -125,7 +131,26 @@ class _LoginPageState extends State<LoginPage> {
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: () async {
+          final String email = _emailController.text.trim();
+          final String password = _passwordController.text.trim();
+
+          try {
+
+            final UserCredential userCredential = await FirebaseAuth.instance
+                .signInWithEmailAndPassword(email: email, password: password);
+
+            print('Logged in successfully!');
+          } on FirebaseAuthException catch (e) {
+            if (e.code == 'user-not-found') {
+              print('No user found for this email.');
+            } else if (e.code == 'wrong-password') {
+              print('Wrong password provided for this email.');
+            } else {
+              print(e.code);
+            }
+          }
+        },
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           padding: EdgeInsets.all(15.0),
