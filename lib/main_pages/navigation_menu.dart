@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:writing_feed_app/feed.dart';
-import 'package:writing_feed_app/new_post.dart';
+import 'package:writing_feed_app/main_pages/feed.dart';
+import 'package:writing_feed_app/post/new_post.dart';
 import 'notifications.dart';
 
 class NavigationMenu extends StatefulWidget {

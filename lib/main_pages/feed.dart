@@ -3,8 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'post.dart';
-import 'new_post.dart';
+import '../post/post.dart';
+import '../post/new_post.dart';
 
 class Feed extends StatefulWidget {
   const Feed({super.key});
@@ -76,7 +76,16 @@ class _FeedState extends State<Feed> {
         children: <Widget>[
           // add debug button widget to refresh all stateful widgets
           Align(alignment: Alignment.center, child: Text(feed)),
-          Align(alignment: Alignment.center, child: Text("Current User ID: " + FirebaseAuth.instance.currentUser!.email.toString())),
+          Align(
+              alignment: Alignment.center,
+              child: Text("Current User ID: " +
+                  FirebaseAuth.instance.currentUser!.email.toString())),
+          ElevatedButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+            },
+            child: Text("Sign Out"),
+          ),
           ElevatedButton(
             onPressed: () async {
               print("button pressed");

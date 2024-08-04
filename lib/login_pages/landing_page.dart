@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:writing_feed_app/login.dart';
-import 'package:writing_feed_app/sign_up.dart';
+import 'package:writing_feed_app/login_pages/login.dart';
+import 'package:writing_feed_app/login_pages/sign_up.dart';
 
 class LandingPage extends StatefulWidget {
   @override
