@@ -3,14 +3,12 @@ import 'package:flutter/services.dart';
 import 'constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginPage extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  bool _rememberMe = false;
-
+class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -86,47 +84,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildForgotPasswordBtn() {
-    return Container(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () => print('Forgot Password Button Pressed'),
-        child: Text(
-          'Forgot Password?',
-          style: kLabelStyle,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRememberMeCheckbox() {
-    return Container(
-      height: 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.green,
-              activeColor: Colors.white,
-              onChanged: (value) {
-                setState(() {
-                  _rememberMe = value!;
-                });
-              },
-            ),
-          ),
-          Text(
-            'Remember me',
-            style: kLabelStyle,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLoginBtn() {
+  Widget _buildSignUpBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
@@ -136,16 +94,15 @@ class _LoginPageState extends State<LoginPage> {
           final String password = _passwordController.text.trim();
 
           try {
-
             final UserCredential userCredential = await FirebaseAuth.instance
-                .signInWithEmailAndPassword(email: email, password: password);
+                .createUserWithEmailAndPassword(email: email, password: password);
 
-            print('Logged in successfully!');
+            print('User registered successfully!');
           } on FirebaseAuthException catch (e) {
-            if (e.code == 'user-not-found') {
-              print('No user found for this email.');
-            } else if (e.code == 'wrong-password') {
-              print('Wrong password provided for this email.');
+            if (e.code == 'weak-password') {
+              print('The password provided is too weak.');
+            } else if (e.code == 'email-already-in-use') {
+              print('The account already exists for that email.');
             } else {
               print(e.code);
             }
@@ -159,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         child: Text(
-          'LOGIN',
+          'SIGN UP',
           style: TextStyle(
             color: Color(0xFF527DAA),
             letterSpacing: 1.5,
@@ -172,115 +129,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildSignUpWithText() {
-    return Column(
-      children: <Widget>[
-        Text(
-          '- OR -',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        SizedBox(height: 20.0),
-        Text(
-          'Sign in with',
-          style: kLabelStyle,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSocialBtn(Function onTap, AssetImage logo) {
-    return GestureDetector(
-      onTap: () => onTap(),
-      child: Container(
-        height: 60.0,
-        width: 60.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              offset: Offset(0, 2),
-              blurRadius: 6.0,
-            ),
-          ],
-          image: DecorationImage(
-            image: logo,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSocialBtnRow() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _buildSocialBtn(
-            () => print('Login with Facebook'),
-            AssetImage(
-              'assets/facebook.png',
-            ),
-          ),
-          _buildSocialBtn(
-            () => print('Login with Google'),
-            AssetImage(
-              'assets/google.png',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSignupBtn() {
-    return GestureDetector(
-      onTap: () => print('Sign Up Button Pressed'),
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: 'Don\'t have an Account? ',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            TextSpan(
-              text: 'Sign Up',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50.0),
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -316,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Sign In',
+                        'Sign Up',
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'OpenSans',
@@ -326,16 +177,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 30.0),
                       _buildEmailTF(),
-                      SizedBox(
-                        height: 30.0,
-                      ),
+                      SizedBox(height: 30.0),
                       _buildPasswordTF(),
-                      _buildForgotPasswordBtn(),
-                      _buildRememberMeCheckbox(),
-                      _buildLoginBtn(),
-                      _buildSignUpWithText(),
-                      _buildSocialBtnRow(),
-                      _buildSignupBtn(),
+                      _buildSignUpBtn(),
                     ],
                   ),
                 ),

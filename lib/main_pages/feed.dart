@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -74,6 +76,7 @@ class _FeedState extends State<Feed> {
         children: <Widget>[
           // add debug button widget to refresh all stateful widgets
           Align(alignment: Alignment.center, child: Text(feed)),
+          Align(alignment: Alignment.center, child: Text("Current User ID: " + FirebaseAuth.instance.currentUser!.email.toString())),
           ElevatedButton(
             onPressed: () async {
               print("button pressed");

@@ -46,7 +46,7 @@ class _LandingPageState extends State<LandingPage> {
       child: ElevatedButton(
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => SignUp()));
+              context, MaterialPageRoute(builder: (context) => SignUpPage()));
         },
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,

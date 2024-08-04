@@ -1,30 +1,47 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:writing_feed_app/landing_page.dart';
-import 'firebase_options.dart';
+import 'landing_page.dart';
+import 'feed.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(MainApp());
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  MainApp({Key? key}) : super(key: key); // Constructor corrected
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Writing Feed App",
-      home: LandingPage(),
+      title: 'Writing Feed',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        appBarTheme: AppBarTheme(color: Colors.cyan),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      home: AuthWrapper(),
     );
   }
 }
-  
+
+class AuthWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a loading indicator while waiting for the authentication state
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        } else if (snapshot.hasData) {
+          // If the user is logged in, show the feed page
+          return Feed();
+        } else {
+          // If the user is not logged in, show the landing page
+          return LandingPage();
+        }
+      },
+    );
+  }
+}
