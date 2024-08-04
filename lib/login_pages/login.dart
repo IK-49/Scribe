@@ -139,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
 
           try {
             final UserCredential userCredential = await FirebaseAuth.instance
-                .signInWithEmailAndPassword(email: email, password: password);
+              .signInWithEmailAndPassword(email: email, password: password);
 
             print('Logged in successfully!');
             Navigator.push(context, MaterialPageRoute(builder: (context) => Feed()));

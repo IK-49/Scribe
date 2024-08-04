@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:writing_feed_app/login_pages/landing_page.dart';
 import 'dart:convert';
 import '../post/post.dart';
 import '../post/new_post.dart';
@@ -76,16 +77,11 @@ class _FeedState extends State<Feed> {
         children: <Widget>[
           // add debug button widget to refresh all stateful widgets
           Align(alignment: Alignment.center, child: Text(feed)),
-          Align(
-              alignment: Alignment.center,
-              child: Text("Current User ID: " +
-                  FirebaseAuth.instance.currentUser!.email.toString())),
-          ElevatedButton(
-            onPressed: () async {
+          Align(alignment: Alignment.center, child: Text("Current User ID: " + FirebaseAuth.instance.currentUser!.email.toString())),
+          ElevatedButton(onPressed: () async {
               await FirebaseAuth.instance.signOut();
-            },
-            child: Text("Sign Out"),
-          ),
+              Navigator.push(context, MaterialPageRoute(builder: (context) => LandingPage()));
+          }, child: Text("Sign Out"),),
           ElevatedButton(
             onPressed: () async {
               print("button pressed");
