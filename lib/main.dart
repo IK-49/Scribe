@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Writing Feed',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Color(0xFFF5F5F5),
       ),
       home: AuthWrapper(),
     );

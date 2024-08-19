@@ -77,11 +77,18 @@ class _FeedState extends State<Feed> {
         children: <Widget>[
           // add debug button widget to refresh all stateful widgets
           Align(alignment: Alignment.center, child: Text(feed)),
-          Align(alignment: Alignment.center, child: Text("Current User ID: " + FirebaseAuth.instance.currentUser!.email.toString())),
-          ElevatedButton(onPressed: () async {
+          Align(
+              alignment: Alignment.center,
+              child: Text("Current User ID: " +
+                  FirebaseAuth.instance.currentUser!.email.toString())),
+          ElevatedButton(
+            onPressed: () async {
               await FirebaseAuth.instance.signOut();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => LandingPage()));
-          }, child: Text("Sign Out"),),
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LandingPage()));
+            },
+            child: Text("Sign Out"),
+          ),
           ElevatedButton(
             onPressed: () async {
               print("button pressed");
@@ -115,21 +122,32 @@ class _FeedState extends State<Feed> {
             },
           ),
           Expanded(
-              //TODO: Add a refresh posts button as right now the list only updates after logging in
-              child: ListView.builder(
-                  itemCount: posts.length,
-                  itemBuilder: (context, index) {
-                    final post = posts[index];
-                    return Card(
-                        margin: const EdgeInsets.all(10.0),
-                        child: ListTile(
-                            title: Text(post.title),
-                            subtitle: Text(post.preview),
-                            leading: CircleAvatar(
-                              //TODO: if no profile picture, use first letter of user, otherwise use profile picture
-                              child: Text(post.user[0].toUpperCase()),
-                            )));
-                  })),
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                final post = posts[index];
+                return Container(
+                  width: 50.0, // Adjust the width of each tile as needed
+                  margin: const EdgeInsets.all(10.0),
+                  child: Card(
+                    child: Container(
+                      height: 240.0,
+                      child: ListTile(
+                        title: Text(post.title),
+                        subtitle: Text(post.preview),
+                        minVerticalPadding: 20.0,
+                        leading: CircleAvatar(
+                          child: Text(post.user[0].toUpperCase()),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+
           Align(
               alignment: Alignment.bottomRight,
               child: SizedBox(
