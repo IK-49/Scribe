@@ -56,9 +56,7 @@ class _FeedState extends State<Feed> {
     setState(() {
       posts = postJson.map((json) => Post.fromJson(json)).toList();
     });
-    /* } else {
-      // error handling here
-    } */
+    // }
   }
 
   @override
@@ -75,12 +73,12 @@ class _FeedState extends State<Feed> {
       ),
       body: Column(
         children: <Widget>[
-          // add debug button widget to refresh all stateful widgets
           Align(alignment: Alignment.center, child: Text(feed)),
           Align(
-              alignment: Alignment.center,
-              child: Text("Current User ID: " +
-                  FirebaseAuth.instance.currentUser!.email.toString())),
+            alignment: Alignment.center,
+            child: Text("Current User ID: " +
+                FirebaseAuth.instance.currentUser!.email.toString()),
+          ),
           ElevatedButton(
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
@@ -95,15 +93,12 @@ class _FeedState extends State<Feed> {
 
               final response = await http
                   .get(Uri.parse('https://aarikg.pythonanywhere.com/pick'));
-              print("1");
               Map json = jsonDecode(response.body);
-              print("1");
-              print(response.body);
               setState(() {
                 feed = json['todaysPick'];
               });
             },
-            child: const Text("Click to reveal todays prompt."),
+            child: const Text("Click to reveal today's prompt."),
           ),
           DropdownButton<String>(
             value: selectedFilter,
@@ -128,18 +123,83 @@ class _FeedState extends State<Feed> {
               itemBuilder: (context, index) {
                 final post = posts[index];
                 return Container(
-                  width: 50.0, // Adjust the width of each tile as needed
-                  margin: const EdgeInsets.all(10.0),
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                   child: Card(
-                    child: Container(
-                      height: 240.0,
-                      child: ListTile(
-                        title: Text(post.title),
-                        subtitle: Text(post.preview),
-                        minVerticalPadding: 20.0,
-                        leading: CircleAvatar(
-                          child: Text(post.user[0].toUpperCase()),
-                        ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    elevation: 4.0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                child: Text(post.user[0].toUpperCase()),
+                                radius: 20.0,
+                              ),
+                              SizedBox(width: 10.0),
+                              Text(
+                                post.user,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                "Posted on Aug 18, 2024", // Replace with actual date
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10.0),
+                          Text(
+                            post.title,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                          SizedBox(height: 10.0),
+                          Text(
+                            post.preview,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          SizedBox(height: 15.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.thumb_up),
+                                onPressed: () {
+                                  // Like action
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.comment),
+                                onPressed: () {
+                                  // Comment action
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.share),
+                                onPressed: () {
+                                  // Share action
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -147,20 +207,22 @@ class _FeedState extends State<Feed> {
               },
             ),
           ),
-
           Align(
-              alignment: Alignment.bottomRight,
-              child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  width: MediaQuery.of(context).size.height * 0.15,
-                  child: FittedBox(
-                      child: IconButton(
-                    icon: Icon(Icons.add_circle_outline),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => NewPost()));
-                    },
-                  )))),
+            alignment: Alignment.bottomRight,
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.15,
+              width: MediaQuery.of(context).size.height * 0.15,
+              child: FittedBox(
+                child: IconButton(
+                  icon: Icon(Icons.add_circle_outline),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => NewPost()));
+                  },
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
