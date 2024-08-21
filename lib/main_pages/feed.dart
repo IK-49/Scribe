@@ -56,7 +56,7 @@ class _FeedState extends State<Feed> {
     setState(() {
       posts = postJson.map((json) => Post.fromJson(json)).toList();
     });
-    // }
+    // } else { //error handling }
   }
 
   @override
@@ -75,7 +75,7 @@ class _FeedState extends State<Feed> {
         children: <Widget>[
           Align(alignment: Alignment.center, child: Text(feed)),
           Align(
-            alignment: Alignment.center,
+            alignment: Alignment.topRight,
             child: Text("Current User ID: " +
                 FirebaseAuth.instance.currentUser!.email.toString()),
           ),

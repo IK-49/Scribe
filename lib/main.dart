@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:writing_feed_app/main_pages/main_page.dart';
 import 'login_pages/landing_page.dart';
 import 'main_pages/feed.dart';
 
@@ -37,7 +38,7 @@ class AuthWrapper extends StatelessWidget {
           );
         } else if (snapshot.hasData) {
           // If the user is logged in, show the feed page
-          return Feed();
+          return MainScreen();
         } else {
           // If the user is not logged in, show the landing page
           return LandingPage();
