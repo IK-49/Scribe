@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:writing_feed_app/main_pages/main_page.dart';
 import 'login_pages/landing_page.dart';
-import 'main_pages/feed.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:writing_feed_app/main_pages/feed.dart';
 import 'package:writing_feed_app/main_pages/main_page.dart';
 import '../constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
