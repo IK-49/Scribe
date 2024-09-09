@@ -72,14 +72,6 @@ class _FeedState extends State<Feed> {
           ),
           ElevatedButton(
             onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LandingPage()));
-            },
-            child: Text("Sign Out"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
               print("button pressed");
 
               final response = await http

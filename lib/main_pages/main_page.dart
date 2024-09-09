@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:writing_feed_app/login_pages/landing_page.dart';
 import 'feed.dart';
 import 'profile.dart';
 import 'notifications.dart';
@@ -27,7 +29,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 107, 99, 255),
+        backgroundColor: Color.fromARGB(255, 107, 99, 255), 
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -68,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
                 color: Colors.blue,
               ),
               child: Text(
-                'Menu',
+                'Navigation',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -97,8 +99,17 @@ class _MainScreenState extends State<MainScreen> {
               onTap: () {
                 // Handle navigation to Settings
                 Navigator.pop(context);
-              },
+              },              
             ),
+            Spacer(),
+            ElevatedButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LandingPage()));
+            },
+            child: Text("Sign Out"),
+          ),
           ],
         ),
       ),
