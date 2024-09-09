@@ -63,6 +63,7 @@ class _FeedState extends State<Feed> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 107, 99, 255),
         title: Center(
           child: Text(
             feed,
