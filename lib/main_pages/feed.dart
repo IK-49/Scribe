@@ -64,12 +64,6 @@ class _FeedState extends State<Feed> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          Align(alignment: Alignment.center, child: Text(feed)),
-          Align(
-            alignment: Alignment.topRight,
-            child: Text("Current User ID: " +
-                FirebaseAuth.instance.currentUser!.email.toString()),
-          ),
           ElevatedButton(
             onPressed: () async {
               print("button pressed");
