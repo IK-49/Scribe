@@ -62,32 +62,8 @@ class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 107, 99, 255),
-        title: Center(
-          child: Text(
-            feed,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
       body: Column(
         children: <Widget>[
-          Align(alignment: Alignment.center, child: Text(feed)),
-          Align(
-            alignment: Alignment.topRight,
-            child: Text("Current User ID: " +
-                FirebaseAuth.instance.currentUser!.email.toString()),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LandingPage()));
-            },
-            child: Text("Sign Out"),
-          ),
           ElevatedButton(
             onPressed: () async {
               print("button pressed");
