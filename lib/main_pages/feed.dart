@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:writing_feed_app/login_pages/landing_page.dart';
@@ -26,37 +25,18 @@ class _FeedState extends State<Feed> {
   }
 
   Future<void> fetchPosts() async {
-    // final response = await http.get(Uri.parse("http://127.0.0.1:5000/posts.json"));
-    //TODO: temporary json for testing; we'll replace it later when we implement the server
-    final response = '''[
-      {
-        "user": "Aakash",
-        "title": "Battlefield 2042",
-        "preview": "hi im aakash i love fortnite"
-      },
-      {
-        "user": "Nathan Manoj Jacob",
-        "title": "A Day in the Life of Nathan Manoj Jacob",
-        "preview": "Today, I want to share a day in my life..."
-      },
-      {
-        "user": "Aarik",
-        "title": "how to backend",
-        "preview": "step 1: http request, step 2: cry"
-      },
-      {
-        "user": "Izad",
-        "title": "The rise of the broken sigma (me)",
-        "preview": "how i became a sigma cool"
-      }
-    ]''';
+    final response = await http
+        .get(Uri.parse("https://aarikg.pythonanywhere.com/responses"));
 
-    // if (response.statusCode == 200) {
-    final List<dynamic> postJson = json.decode(response /*.body*/);
-    setState(() {
-      posts = postJson.map((json) => Post.fromJson(json)).toList();
-    });
-    // } else { //error handling }
+    if (response.statusCode == 200) {
+      final List<dynamic> postJson = json.decode(response.body);
+      setState(() {
+        posts = postJson.map((json) => Post.fromJson(json)).toList();
+      });
+    } else {
+      // Handle error
+      print('Failed to load posts');
+    }
   }
 
   @override
@@ -90,7 +70,6 @@ class _FeedState extends State<Feed> {
                 selectedFilter = newValue!;
               });
               print('Current filter: $selectedFilter');
-              // Add logic here to sort/filter posts based on selectedFilter
             },
           ),
           Expanded(
@@ -101,7 +80,8 @@ class _FeedState extends State<Feed> {
                 final post = posts[index];
                 return Container(
                   width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 5.0),
                   child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -128,7 +108,7 @@ class _FeedState extends State<Feed> {
                               ),
                               Spacer(),
                               Text(
-                                "Posted on Aug 18, 2024", // Replace with actual date
+                                "Posted on Aug 18, 2024",
                                 style: TextStyle(
                                   fontSize: 12.0,
                                   color: Colors.grey[600],
