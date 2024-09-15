@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:writing_feed_app/login_pages/landing_page.dart';
 import 'dart:convert';
 import '../post/post.dart';
 import '../post/new_post.dart';

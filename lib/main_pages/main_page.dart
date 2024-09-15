@@ -12,6 +12,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  bool _isExpanded = false; // Controls the visibility of the overlay box
 
   static const List<Widget> _pages = <Widget>[
     Feed(),
@@ -40,8 +41,65 @@ class _MainScreenState extends State<MainScreen> {
             );
           },
         ),
+        title: Text("Writing Feed"),
       ),
-      body: _pages[_selectedIndex],
+      body: Stack(
+        children: [
+          // Main screen content (Feed, Profile, Notifications)
+          Column(
+            children: [
+              Expanded(
+                child: _pages[_selectedIndex],
+              ),
+            ],
+          ),
+          // Positioned overlay button and expanding box
+          Positioned(
+            top: 20, // Position it below the app bar
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                // Circular arrow icon button in the center
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isExpanded = !_isExpanded;
+                    });
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    radius: 25,
+                    child: Icon(
+                      _isExpanded ? Icons.expand_less : Icons.expand_more,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                // Expanding box when the arrow is pressed
+                if (_isExpanded)
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    padding: EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      'Prompt Placeholder',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -74,7 +132,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     child: Text(
                       'Navigation' + "\n\n Current User ID: " +
-                FirebaseAuth.instance.currentUser!.email.toString(),
+                          FirebaseAuth.instance.currentUser!.email.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
@@ -85,15 +143,13 @@ class _MainScreenState extends State<MainScreen> {
                     leading: Icon(Icons.home),
                     title: Text('Home'),
                     onTap: () {
-                      // Handle navigation to Home
-                      Navigator.pop(context); // Close the drawer
+                      Navigator.pop(context);
                     },
                   ),
                   ListTile(
                     leading: Icon(Icons.person),
                     title: Text('Profile'),
                     onTap: () {
-                      // Handle navigation to Profile
                       Navigator.pop(context);
                     },
                   ),
@@ -101,14 +157,12 @@ class _MainScreenState extends State<MainScreen> {
                     leading: Icon(Icons.settings),
                     title: Text('Settings'),
                     onTap: () {
-                      // Handle navigation to Settings
                       Navigator.pop(context);
                     },
                   ),
                 ],
               ),
             ),
-            // Push the Sign Out button to the bottom using padding
             Padding(
               padding: EdgeInsets.all(16.0),
               child: ElevatedButton(
