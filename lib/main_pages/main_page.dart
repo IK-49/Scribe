@@ -132,7 +132,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     child: Text(
                       'Navigation' + "\n\n Current User ID: " +
-                          FirebaseAuth.instance.currentUser!.email.toString(),
+                          FirebaseAuth.instance.currentUser!.displayName.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
