@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_quill/flutter_quill.dart';
@@ -23,7 +24,7 @@ class _NewPostState extends State<NewPost> {
         : postContent;
 
     final postDetails = {
-      "user": "anon",
+      "user": FirebaseAuth.instance.currentUser?.displayName.toString(),
       "title": postTitle,
       "preview": preview,
     };
@@ -37,7 +38,7 @@ class _NewPostState extends State<NewPost> {
     );
 
     if (response.statusCode == 200) {
-      Navigator.push(
+      Navigator.push( 
         context,
         MaterialPageRoute(
           builder: (context) => MainScreen(),

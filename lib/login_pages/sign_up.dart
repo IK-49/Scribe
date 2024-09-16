@@ -11,6 +11,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _displayNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   Widget _buildEmailTF() {
@@ -41,6 +42,42 @@ class _SignUpPageState extends State<SignUpPage> {
                 color: Colors.white,
               ),
               hintText: 'Enter your Email',
+              hintStyle: kHintTextStyle,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDisplayNameTF() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Username',
+          style: kLabelStyle,
+        ), 
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 60.0,
+          child: TextField(
+            controller: _displayNameController,
+            keyboardType: TextInputType.name,
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.person,
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Username',
               hintStyle: kHintTextStyle,
             ),
           ),
@@ -92,12 +129,16 @@ class _SignUpPageState extends State<SignUpPage> {
       child: ElevatedButton(
         onPressed: () async {
           final String email = _emailController.text.trim();
+          final String displayName = _displayNameController.text.trim();
           final String password = _passwordController.text.trim();
 
           try {
             final UserCredential userCredential = await FirebaseAuth.instance
                 .createUserWithEmailAndPassword(email: email, password: password);
-
+            User? user = FirebaseAuth.instance.currentUser;
+            await user?.updateProfile(displayName: displayName);
+            await user?.reload();
+            user = FirebaseAuth.instance.currentUser;
             print('User registered successfully!');
             Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
           } on FirebaseAuthException catch (e) {
@@ -179,7 +220,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       SizedBox(height: 30.0),
                       _buildEmailTF(),
-                      SizedBox(height: 30.0),
+                      SizedBox(height: 20.0),
+                      _buildDisplayNameTF(),
+                      SizedBox(height: 20.0),
                       _buildPasswordTF(),
                       _buildSignUpBtn(),
                     ],
