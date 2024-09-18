@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:writing_feed_app/login_pages/landing_page.dart';
+import 'package:Scribe/login_pages/landing_page.dart';
 import 'feed.dart';
 import 'profile.dart';
 import 'notifications.dart';
@@ -65,7 +65,7 @@ class _MainScreenState extends State<MainScreen> {
             );
           },
         ),
-        title: Text("Writing Feed"),
+        title: Text("Scribe"),
       ),
       body: Stack(
         children: [

@@ -1,2 +1,2 @@
-# writing-feed-app
+# scribe
  

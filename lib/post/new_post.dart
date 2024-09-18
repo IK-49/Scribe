@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:http/http.dart' as http;
-import 'package:writing_feed_app/main_pages/main_page.dart';
+import 'package:Scribe/main_pages/main_page.dart';
 import 'dart:convert';
 import '../main_pages/feed.dart';
 

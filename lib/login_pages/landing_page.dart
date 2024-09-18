@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:writing_feed_app/login_pages/login.dart';
-import 'package:writing_feed_app/login_pages/sign_up.dart';
+import 'package:Scribe/login_pages/login.dart';
+import 'package:Scribe/login_pages/sign_up.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -108,7 +108,7 @@ class _LandingPageState extends State<LandingPage> {
                     children: <Widget>[
                       SizedBox(height: 60.0),
                       Text(
-                        'Writing Feed',
+                        'Scribe',
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'OpenSans',

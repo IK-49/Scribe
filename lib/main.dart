@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:writing_feed_app/main_pages/main_page.dart';
+import 'package:Scribe/main_pages/main_page.dart';
 import 'login_pages/landing_page.dart';
 
 void main() async {
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Writing Feed',
+      title: 'Scribe',
       theme: ThemeData(
         scaffoldBackgroundColor: Color.fromARGB(255, 245, 244, 255),
       ),
