@@ -42,33 +42,28 @@ class _FeedState extends State<Feed> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          ElevatedButton(
-            onPressed: () async {
-              print("button pressed");
-
-              final response = await http
-                  .get(Uri.parse('https://aarikg.pythonanywhere.com/pick'));
-              Map json = jsonDecode(response.body);
-              setState(() {
-                feed = json['todaysPick'];
-              });
-            },
-            child: const Text("Click to reveal today's prompt."),
-          ),
-          DropdownButton<String>(
-            value: selectedFilter,
-            items: <String>['Recent', 'Hot', 'Old'].map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                selectedFilter = newValue!;
-              });
-              print('Current filter: $selectedFilter');
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 20.0, right: 50.0),
+                child: DropdownButton<String>(
+                  value: selectedFilter,
+                  items: <String>['Recent', 'Hot', 'Old'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedFilter = newValue!;
+                    });
+                    print('Current filter: $selectedFilter');
+                  },
+                ),
+              ),
+            ],
           ),
           Expanded(
             child: ListView.builder(
@@ -106,6 +101,7 @@ class _FeedState extends State<Feed> {
                               ),
                               Spacer(),
                               Text(
+                                // add actual post date here
                                 "Posted on Aug 18, 2024",
                                 style: TextStyle(
                                   fontSize: 12.0,

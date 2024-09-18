@@ -4,6 +4,8 @@ import 'package:writing_feed_app/login_pages/landing_page.dart';
 import 'feed.dart';
 import 'profile.dart';
 import 'notifications.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   bool _isExpanded = false; // Controls the visibility of the overlay box
+  String prompt = 'Loading...'; // Placeholder text for the prompt
 
   static const List<Widget> _pages = <Widget>[
     Feed(),
@@ -20,10 +23,31 @@ class _MainScreenState extends State<MainScreen> {
     Notifications(),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _getDailyPrompt(); // Fetch the prompt when the app starts
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Future<void> _getDailyPrompt() async {
+    final response =
+        await http.get(Uri.parse('https://aarikg.pythonanywhere.com/pick'));
+    if (response.statusCode == 200) {
+      Map json = jsonDecode(response.body);
+      setState(() {
+        prompt = json['todaysPick']; // Replace the placeholder with the actual prompt
+      });
+    } else {
+      setState(() {
+        prompt = 'Error fetching prompt';
+      });
+    }
   }
 
   @override
@@ -55,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           // Positioned overlay button and expanding box
           Positioned(
-            top: 20, // Position it below the app bar
+            top: 10, // Position it below the app bar
             left: 0,
             right: 0,
             child: Column(
@@ -81,14 +105,14 @@ class _MainScreenState extends State<MainScreen> {
                 // Expanding box when the arrow is pressed
                 if (_isExpanded)
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.9,
+                    width: MediaQuery.of(context).size.width * 0.5,
                     padding: EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
                       color: Colors.blueAccent.withOpacity(0.9),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      'Prompt Placeholder',
+                      prompt, // Display the fetched prompt here
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -131,8 +155,10 @@ class _MainScreenState extends State<MainScreen> {
                       color: Colors.blue,
                     ),
                     child: Text(
-                      'Navigation' + "\n\n Current User ID: " +
-                          FirebaseAuth.instance.currentUser!.displayName.toString(),
+                      'Navigation' +
+                          "\n\n Current User ID: " +
+                          FirebaseAuth.instance.currentUser!.displayName
+                              .toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
