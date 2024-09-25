@@ -1,9 +1,9 @@
+import 'package:Scribe/post/post_card.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../post/post.dart';
-import '../post/new_post.dart';
-import '../post/post_details.dart'; // Import the new PostDetail screen
+import '../post/post_details.dart'; // Import the PostDetails screen
+import '../post/new_post.dart'; // Assuming you're using this somewhere
 
 class Feed extends StatefulWidget {
   const Feed({super.key});
@@ -20,169 +20,53 @@ class _FeedState extends State<Feed> {
   @override
   void initState() {
     super.initState();
-    fetchPosts();
+    // No need to call getPosts() here since StreamBuilder will handle it
   }
 
-  Future<void> fetchPosts() async {
-    final response = await http.get(Uri.parse("https://aarikg.pythonanywhere.com/responses"));
-
-    if (response.statusCode == 200) {
-      final List<dynamic> postJson = json.decode(response.body);
-      setState(() {
-        posts = postJson.map((json) => Post.fromJson(json)).toList();
-      });
-    } else {
-      // Handle error
-      print('Failed to load posts');
-    }
+  // Fetch posts from Firestore in a stream
+  Stream<List<Post>> getPosts() {
+    return FirebaseFirestore.instance
+        .collection('posts')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Post.fromJson(doc.data())).toList());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 20.0, right: 50.0),
-                child: DropdownButton<String>(
-                  value: selectedFilter,
-                  items: <String>['Recent', 'Hot', 'Old'].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedFilter = newValue!;
-                    });
-                    print('Current filter: $selectedFilter');
-                  },
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                final post = posts[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PostDetails(post: post), // Pass the post to the detail screen
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      elevation: 4.0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  child: Text(post.user[0].toUpperCase()),
-                                  radius: 20.0,
-                                ),
-                                SizedBox(width: 10.0),
-                                Text(
-                                  post.user,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                                Spacer(),
-                                Text(
-                                  "Posted on Aug 18, 2024",
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10.0),
-                            Text(
-                              post.title,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
-                              ),
-                            ),
-                            SizedBox(height: 10.0),
-                            Text(
-                              post.preview.length > 30 ? post.preview.substring(0, 30) + '...' : post.preview,
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            SizedBox(height: 15.0),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.thumb_up),
-                                  onPressed: () {
-                                    // Like action
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.comment),
-                                  onPressed: () {
-                                    // Comment action
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.share),
-                                  onPressed: () {
-                                    // Share action
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+      body: StreamBuilder<List<Post>>(
+        stream: getPosts(), // Listening to Firestore updates
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(child: Text('Something went wrong'));
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final posts = snapshot.data ?? [];
+
+          return ListView.builder(
+            itemCount: posts.length,
+            itemBuilder: (context, index) {
+              final post = posts[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PostDetails(post: post),
                     ),
-                  ),
-                );
-              },
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.15,
-              width: MediaQuery.of(context).size.height * 0.15,
-              child: FittedBox(
-                child: IconButton(
-                  icon: Icon(Icons.add_circle_outline),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => NewPost()));
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
+                  );
+                },
+                child: PostCard(post: post), // Ensure PostCard widget is defined
+              );
+            },
+          );
+        },
       ),
     );
   }

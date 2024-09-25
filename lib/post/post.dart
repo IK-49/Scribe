@@ -1,21 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Post {
-  final String user;
   final String title;
-  final String preview;
+  final String fullContent;
+  final String user;
+  final Timestamp createdAt; // Firestore Timestamp
 
   Post({
-    required this.user,
     required this.title,
-    required this.preview,
+    required this.fullContent,
+    required this.user,
+    required this.createdAt,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      user: json['user'] as String,
-      title: json['title'] as String,
-      preview: json['preview'] is String
-          ? json['preview'] as String
-          : json['preview'].toString(), 
+      title: json['title'],
+      fullContent: json['fullContent'],
+      user: json['user'],
+      createdAt: json['createdAt'],
     );
   }
 }

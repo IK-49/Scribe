@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:Scribe/main_pages/main_page.dart';
 import 'dart:convert';
 import '../main_pages/feed.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class NewPost extends StatefulWidget {
   @override
@@ -16,37 +18,34 @@ class _NewPostState extends State<NewPost> {
   final quill.QuillController _controller = quill.QuillController.basic();
   final TextEditingController _titleController = TextEditingController();
 
+
   Future<void> _submitPost() async {
   final postContent = _controller.document.toPlainText();
   final postTitle = _titleController.text;
   final preview = postContent.length > 30 ? postContent.substring(0, 30) + '...' : postContent;
 
-  final postDetails = {
-    "user": FirebaseAuth.instance.currentUser?.displayName.toString(),
-    "title": postTitle,
-    "preview": preview,
-    "fullContent": postContent,  // Send the full content to the backend
-  };
+  // Get the current user
+  final user = FirebaseAuth.instance.currentUser?.displayName.toString();
 
-  final response = await http.post(
-    Uri.parse('https://aarikg.pythonanywhere.com/submit'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(postDetails),
-  );
+  // Reference to Firestore collection
+  CollectionReference posts = FirebaseFirestore.instance.collection('posts');
 
-  if (response.statusCode == 200) {
+  // Add post to Firestore
+  await posts.add({
+    'user': user,
+    'title': postTitle,
+    'preview': preview,
+    'fullContent': postContent,
+    'createdAt': Timestamp.now(),
+  }).then((value) {
+    print('Post Added');
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => MainScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => MainScreen()),
     );
-  } else {
-    // Handle error
-    print('Failed to submit post');
-  }
+  }).catchError((error) {
+    print("Failed to add post: $error");
+  });
 }
 
 
