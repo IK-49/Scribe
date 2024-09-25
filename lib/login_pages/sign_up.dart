@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:Scribe/main_pages/main_page.dart';
-import '../constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -20,18 +19,32 @@ class _SignUpPageState extends State<SignUpPage> {
       children: <Widget>[
         Text(
           'Email',
-          style: kLabelStyle,
+          style: TextStyle(
+            color: Colors.white, // kLabelStyle replacement
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
         ),
         SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
+          decoration: BoxDecoration(
+            color: Colors.white, // kBoxDecorationStyle replacement
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
           height: 60.0,
           child: TextField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
               fontFamily: 'Roboto',
             ),
             decoration: InputDecoration(
@@ -39,10 +52,13 @@ class _SignUpPageState extends State<SignUpPage> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.email,
-                color: Colors.white,
+                color: Colors.black,
               ),
               hintText: 'Enter your Email',
-              hintStyle: kHintTextStyle,
+              hintStyle: TextStyle(
+                color: Colors.black54, // kHintTextStyle replacement
+                fontFamily: 'OpenSans',
+              ),
             ),
           ),
         ),
@@ -56,12 +72,26 @@ class _SignUpPageState extends State<SignUpPage> {
       children: <Widget>[
         Text(
           'Username',
-          style: kLabelStyle,
-        ), 
+          style: TextStyle(
+            color: Colors.white, // kLabelStyle replacement
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
         SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
+          decoration: BoxDecoration(
+            color: Colors.white, // kBoxDecorationStyle replacement
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
           height: 60.0,
           child: TextField(
             controller: _displayNameController,
@@ -75,10 +105,13 @@ class _SignUpPageState extends State<SignUpPage> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.person,
-                color: Colors.white,
+                color: Colors.black,
               ),
               hintText: 'Enter your Username',
-              hintStyle: kHintTextStyle,
+              hintStyle: TextStyle(
+                color: Colors.black54, // kHintTextStyle replacement
+                fontFamily: 'OpenSans',
+              ),
             ),
           ),
         ),
@@ -92,12 +125,26 @@ class _SignUpPageState extends State<SignUpPage> {
       children: <Widget>[
         Text(
           'Password',
-          style: kLabelStyle,
+          style: TextStyle(
+            color: Colors.white, // kLabelStyle replacement
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
         ),
         SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
+          decoration: BoxDecoration(
+            color: Colors.white, // kBoxDecorationStyle replacement
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
           height: 60.0,
           child: TextField(
             controller: _passwordController,
@@ -111,10 +158,13 @@ class _SignUpPageState extends State<SignUpPage> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.lock,
-                color: Colors.white,
+                color: Colors.black,
               ),
               hintText: 'Enter your Password',
-              hintStyle: kHintTextStyle,
+              hintStyle: TextStyle(
+                color: Colors.black54, // kHintTextStyle replacement
+                fontFamily: 'OpenSans',
+              ),
             ),
           ),
         ),
@@ -134,13 +184,15 @@ class _SignUpPageState extends State<SignUpPage> {
 
           try {
             final UserCredential userCredential = await FirebaseAuth.instance
-                .createUserWithEmailAndPassword(email: email, password: password);
+                .createUserWithEmailAndPassword(
+                    email: email, password: password);
             User? user = FirebaseAuth.instance.currentUser;
             await user?.updateProfile(displayName: displayName);
             await user?.reload();
             user = FirebaseAuth.instance.currentUser;
             print('User registered successfully!');
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MainScreen()));
           } on FirebaseAuthException catch (e) {
             if (e.code == 'weak-password') {
               print('The password provided is too weak.');
@@ -152,16 +204,16 @@ class _SignUpPageState extends State<SignUpPage> {
           }
         },
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
+          backgroundColor: Colors.black,
           padding: EdgeInsets.all(15.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(10.0),
           ),
         ),
         child: Text(
           'SIGN UP',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: Colors.white,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -185,17 +237,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFF73AEF5),
-                      Color(0xFF61A4F1),
-                      Color(0xFF478DE0),
-                      Color(0xFF398AE5),
-                    ],
-                    stops: [0.1, 0.4, 0.7, 0.9],
-                  ),
+                  color: Color.fromARGB(255, 58, 73, 238),
                 ),
               ),
               Container(

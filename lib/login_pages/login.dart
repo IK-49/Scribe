@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:Scribe/main_pages/main_page.dart';
-import '../constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'sign_up.dart';
 
@@ -22,18 +21,32 @@ class _LoginPageState extends State<LoginPage> {
       children: <Widget>[
         Text(
           'Email',
-          style: kLabelStyle,
+          style: TextStyle(
+            color: Colors.white, // kLabelStyle replacement
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
         ),
         SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
+          decoration: BoxDecoration(
+            color: Colors.white, // kBoxDecorationStyle replacement
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
           height: 60.0,
           child: TextField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
               fontFamily: 'Roboto',
             ),
             decoration: InputDecoration(
@@ -41,10 +54,13 @@ class _LoginPageState extends State<LoginPage> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.email,
-                color: Colors.white,
+                color: Colors.black,
               ),
               hintText: 'Enter your Email',
-              hintStyle: kHintTextStyle,
+              hintStyle: TextStyle(
+                color: Colors.black54, // kHintTextStyle replacement
+                fontFamily: 'OpenSans',
+              ),
             ),
           ),
         ),
@@ -58,18 +74,32 @@ class _LoginPageState extends State<LoginPage> {
       children: <Widget>[
         Text(
           'Password',
-          style: kLabelStyle,
+          style: TextStyle(
+            color: Colors.white, // kLabelStyle replacement
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
         ),
         SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
+          decoration: BoxDecoration(
+            color: Colors.white, // kBoxDecorationStyle replacement
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
           height: 60.0,
           child: TextField(
             controller: _passwordController,
             obscureText: true,
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
               fontFamily: 'Roboto',
             ),
             decoration: InputDecoration(
@@ -77,10 +107,13 @@ class _LoginPageState extends State<LoginPage> {
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.lock,
-                color: Colors.white,
+                color: Colors.black,
               ),
               hintText: 'Enter your Password',
-              hintStyle: kHintTextStyle,
+              hintStyle: TextStyle(
+                color: Colors.black54, // kHintTextStyle replacement
+                fontFamily: 'OpenSans',
+              ),
             ),
           ),
         ),
@@ -95,7 +128,11 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () => print('Forgot Password Button Pressed'),
         child: Text(
           'Forgot Password?',
-          style: kLabelStyle,
+          style: TextStyle(
+            color: Colors.white, // kLabelStyle replacement
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
         ),
       ),
     );
@@ -121,7 +158,11 @@ class _LoginPageState extends State<LoginPage> {
           ),
           Text(
             'Remember me',
-            style: kLabelStyle,
+            style: TextStyle(
+              color: Colors.white, // kLabelStyle replacement
+              fontWeight: FontWeight.bold,
+              fontFamily: 'OpenSans',
+            ),
           ),
         ],
       ),
@@ -139,10 +180,11 @@ class _LoginPageState extends State<LoginPage> {
 
           try {
             final UserCredential userCredential = await FirebaseAuth.instance
-              .signInWithEmailAndPassword(email: email, password: password);
+                .signInWithEmailAndPassword(email: email, password: password);
 
             print('Logged in successfully!');
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MainScreen()));
           } on FirebaseAuthException catch (e) {
             if (e.code == 'user-not-found') {
               print('No user found for this email.');
@@ -154,16 +196,16 @@ class _LoginPageState extends State<LoginPage> {
           }
         },
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
+          backgroundColor: Colors.black, // Same color as landing page
           padding: EdgeInsets.all(15.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(10.0),
           ),
         ),
         child: Text(
           'LOGIN',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: Colors.white, // White text
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -187,52 +229,74 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(height: 20.0),
         Text(
           'Sign in with',
-          style: kLabelStyle,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSocialBtn(Function onTap, AssetImage logo) {
-    return GestureDetector(
-      onTap: () => onTap(),
-      child: Container(
-        height: 60.0,
-        width: 60.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              offset: Offset(0, 2),
-              blurRadius: 6.0,
-            ),
-          ],
-          image: DecorationImage(
-            image: logo,
+          style: TextStyle(
+            color: Colors.white, // kLabelStyle replacement
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
           ),
         ),
-      ),
+      ],
     );
   }
 
   Widget _buildSocialBtnRow() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _buildSocialBtn(
-            () => print('Login with Facebook'),
-            AssetImage(
-              'assets/facebook.png',
+      child: Column(
+        children: [
+          // Google button
+          Container(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () => print('Login with Google'),
+              icon: Image.asset(
+                'assets/google.png', // Google icon asset
+                height: 24.0,
+              ),
+              label: Text(
+                'Sign in with Google',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white, // Google button color
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
             ),
           ),
-          _buildSocialBtn(
-            () => print('Login with Google'),
-            AssetImage(
-              'assets/google.png',
+          SizedBox(height: 10.0),
+          // Facebook button
+          Container(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () => print('Login with Facebook'),
+              icon: Image.asset(
+                'assets/facebook.png', // Facebook icon asset
+                height: 24.0,
+              ),
+              label: Text(
+                'Sign in with Facebook',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF3b5998), // Facebook button color
+                padding: EdgeInsets.symmetric(vertical: 15.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
             ),
           ),
         ],
@@ -282,17 +346,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFF73AEF5),
-                      Color(0xFF61A4F1),
-                      Color(0xFF478DE0),
-                      Color(0xFF398AE5),
-                    ],
-                    stops: [0.1, 0.4, 0.7, 0.9],
-                  ),
+                  color: Color.fromARGB(255, 58, 73, 238),
                 ),
               ),
               Container(
