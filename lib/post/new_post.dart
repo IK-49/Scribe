@@ -17,38 +17,38 @@ class _NewPostState extends State<NewPost> {
   final TextEditingController _titleController = TextEditingController();
 
   Future<void> _submitPost() async {
-    final postContent = _controller.document.toPlainText();
-    final postTitle = _titleController.text;
-    final preview = postContent.length > 30
-        ? postContent.substring(0, 30) + '...'
-        : postContent;
+  final postContent = _controller.document.toPlainText();
+  final postTitle = _titleController.text;
+  final preview = postContent.length > 30 ? postContent.substring(0, 30) + '...' : postContent;
 
-    final postDetails = {
-      "user": FirebaseAuth.instance.currentUser?.displayName.toString(),
-      "title": postTitle,
-      "preview": preview,
-    };
+  final postDetails = {
+    "user": FirebaseAuth.instance.currentUser?.displayName.toString(),
+    "title": postTitle,
+    "preview": preview,
+    "fullContent": postContent,  // Send the full content to the backend
+  };
 
-    final response = await http.post(
-      Uri.parse('https://aarikg.pythonanywhere.com/submit'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(postDetails),
+  final response = await http.post(
+    Uri.parse('https://aarikg.pythonanywhere.com/submit'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(postDetails),
+  );
+
+  if (response.statusCode == 200) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MainScreen(),
+      ),
     );
-
-    if (response.statusCode == 200) {
-      Navigator.push( 
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainScreen(),
-        ),
-      );
-    } else {
-      // Handle error
-      print('Failed to submit post');
-    }
+  } else {
+    // Handle error
+    print('Failed to submit post');
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

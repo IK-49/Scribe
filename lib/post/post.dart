@@ -11,9 +11,11 @@ class Post {
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      user: json['user'],
-      title: json['title'],
-      preview: json['preview'],
+      user: json['user'] as String,
+      title: json['title'] as String,
+      preview: json['preview'] is String
+          ? json['preview'] as String
+          : json['preview'].toString(), 
     );
   }
 }

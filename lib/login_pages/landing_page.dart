@@ -87,7 +87,7 @@ class _LandingPageState extends State<LandingPage> {
               // Positioned large text in the background
               Positioned(
                 top: 100,
-                left: 20,
+                left: 100,
                 right: 20,
                 child: Text(
                   'The\nBest\nWriting\nApp', // The large white text
