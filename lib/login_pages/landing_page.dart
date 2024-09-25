@@ -11,7 +11,7 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   Widget _buildLoginBtn() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
+      padding: EdgeInsets.symmetric(vertical: 15.0),
       width: MediaQuery.of(context).size.width * 0.75,
       child: ElevatedButton(
         onPressed: () {
@@ -19,20 +19,20 @@ class _LandingPageState extends State<LandingPage> {
               context, MaterialPageRoute(builder: (context) => LoginPage()));
         },
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
+          backgroundColor: Colors.black,
           padding: EdgeInsets.all(15.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(10.0),
           ),
         ),
         child: Text(
-          'LOGIN',
+          'I already have an account',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: Colors.white,
             letterSpacing: 1.5,
-            fontSize: 18.0,
+            fontSize: 20.0,
             fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
+            fontFamily: 'Roboto',
           ),
         ),
       ),
@@ -41,7 +41,7 @@ class _LandingPageState extends State<LandingPage> {
 
   Widget _buildSignupBtn() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 0.0),
+      padding: EdgeInsets.symmetric(vertical: 10.0),
       width: MediaQuery.of(context).size.width * 0.75,
       child: ElevatedButton(
         onPressed: () {
@@ -49,20 +49,20 @@ class _LandingPageState extends State<LandingPage> {
               context, MaterialPageRoute(builder: (context) => SignUpPage()));
         },
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
+          backgroundColor: Colors.white,
           padding: EdgeInsets.all(15.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(10.0),
           ),
         ),
         child: Text(
-          'SIGN UP',
+          'Get Started',
           style: TextStyle(
-            color: Color(0xFF527DAA),
+            color: Colors.black,
             letterSpacing: 1.5,
-            fontSize: 18.0,
+            fontSize: 20.0,
             fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
+            fontFamily: 'Roboto',
           ),
         ),
       ),
@@ -78,25 +78,26 @@ class _LandingPageState extends State<LandingPage> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
             children: <Widget>[
+              // Solid color background
               Container(
                 height: double.infinity,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  /*image: DecorationImage(
-                    image: AssetImage("assets/background2.jpg"),
-                    fit: BoxFit.cover,
-                  ),*/
-
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFF73AEF5),
-                      Color(0xFF61A4F1),
-                      Color(0xFF478DE0),
-                      Color(0xFF398AE5),
-                    ],
-                    stops: [0.1, 0.4, 0.7, 0.9],
+                color: Color.fromARGB(255, 58, 73, 238), // Set your preferred solid color here
+              ),
+              // Positioned large text in the background
+              Positioned(
+                top: 100,
+                left: 20,
+                right: 20,
+                child: Text(
+                  'The\nBest\nWriting\nApp', // The large white text
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 150.0, // Large font size
+                    fontFamily: "RubicMonoOne",
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white.withOpacity(1), // Transparent white to blend with background
+                    letterSpacing: 2.0,
                   ),
                 ),
               ),
@@ -106,37 +107,19 @@ class _LandingPageState extends State<LandingPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      SizedBox(height: 60.0),
-                      Text(
-                        'Scribe',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'OpenSans',
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                       Spacer(),
-                      Text(
-                        'The best creative-writing app.',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'OpenSans',
-                          fontSize: 18.0,
-                        ),
-                      ),
-                      SizedBox(
-                          height:
-                              10.0), // Space between the text and the button
-                      _buildLoginBtn(),
+                      SizedBox(height: 60.0),
+                      // Removed the image
+                      SizedBox(height: 100),
+                      
+                      SizedBox(height: 10.0), // Space between the text and the button
                       _buildSignupBtn(),
-                      SizedBox(
-                          height:
-                              50.0), // Space between the buttons and the bottom
+                      _buildLoginBtn(),
+                      SizedBox(height: 40.0), // Space between the buttons and the bottom
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

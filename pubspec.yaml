@@ -27,7 +27,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/google.png
-    - assets/facebook.png
-    - assets/background.jpg
-    - assets/background2.jpg
+    - assets/
+
+fonts:
+    - family: RubicMonicOne
+      fonts:
+        - asset: assets/fonts/assets/fonts/RubikMonoOne-Regular.ttf
+          style: 

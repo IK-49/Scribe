@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Scribe/main_pages/main_page.dart';
 import 'login_pages/landing_page.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,12 +14,16 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
     return MaterialApp(
       title: 'Scribe',
       theme: ThemeData(
         scaffoldBackgroundColor: Color.fromARGB(255, 245, 244, 255),
       ),
-      home: AuthWrapper(),  
+      home: AuthWrapper(),
     );
   }
 }

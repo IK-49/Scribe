@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.white,
-              fontFamily: 'OpenSans',
+              fontFamily: 'Roboto',
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
             obscureText: true,
             style: TextStyle(
               color: Colors.white,
-              fontFamily: 'OpenSans',
+              fontFamily: 'Roboto',
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -167,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
+            fontFamily: 'Roboto',
           ),
         ),
       ),
@@ -310,7 +310,7 @@ class _LoginPageState extends State<LoginPage> {
                         'Sign In',
                         style: TextStyle(
                           color: Colors.white,
-                          fontFamily: 'OpenSans',
+                          fontFamily: 'Roboto',
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
                         ),

@@ -32,7 +32,7 @@ class _SignUpPageState extends State<SignUpPage> {
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.white,
-              fontFamily: 'OpenSans',
+              fontFamily: 'Roboto',
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -68,7 +68,7 @@ class _SignUpPageState extends State<SignUpPage> {
             keyboardType: TextInputType.name,
             style: TextStyle(
               color: Colors.white,
-              fontFamily: 'OpenSans',
+              fontFamily: 'Roboto',
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -104,7 +104,7 @@ class _SignUpPageState extends State<SignUpPage> {
             obscureText: true,
             style: TextStyle(
               color: Colors.white,
-              fontFamily: 'OpenSans',
+              fontFamily: 'Roboto',
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -165,7 +165,7 @@ class _SignUpPageState extends State<SignUpPage> {
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
+            fontFamily: 'Roboto',
           ),
         ),
       ),
@@ -213,7 +213,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         'Sign Up',
                         style: TextStyle(
                           color: Colors.white,
-                          fontFamily: 'OpenSans',
+                          fontFamily: 'Roboto',
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
                         ),
