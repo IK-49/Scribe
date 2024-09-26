@@ -1,10 +1,84 @@
+import 'package:Scribe/post/comment.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:share_plus/share_plus.dart';
 import '../post/post.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final Post post;
 
-  const PostCard({super.key, required this.post});
+  const PostCard({Key? key, required this.post}) : super(key: key);
+
+  @override
+  _PostCardState createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  bool isLiked = false;
+  int likeCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch initial like status and like count from Firestore
+    fetchLikeStatus();
+  }
+
+  // Fetch the current like count and whether the user has liked the post
+  void fetchLikeStatus() async {
+    final postSnapshot = await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.post.id)
+        .get();
+    if (postSnapshot.exists) {
+      setState(() {
+        likeCount = postSnapshot['likeCount'] ?? 0;
+        isLiked = postSnapshot['likedBy'].contains('currentUserId'); // Replace 'currentUserId' with the actual user ID
+      });
+    }
+  }
+
+  // Toggle the like status and update Firestore
+  void toggleLike() async {
+    final postRef = FirebaseFirestore.instance.collection('posts').doc(widget.post.id);
+
+    if (isLiked) {
+      // If post is already liked, unlike it
+      await postRef.update({
+        'likeCount': FieldValue.increment(-1),
+        'likedBy': FieldValue.arrayRemove(['currentUserId']),
+      });
+      setState(() {
+        isLiked = false;
+        likeCount--;
+      });
+    } else {
+      // Like the post
+      await postRef.update({
+        'likeCount': FieldValue.increment(1),
+        'likedBy': FieldValue.arrayUnion(['currentUserId']),
+      });
+      setState(() {
+        isLiked = true;
+        likeCount++;
+      });
+    }
+  }
+
+  // Share the post using the 'share_plus' package
+  void sharePost() {
+    Share.share('${widget.post.title}\n${widget.post.content}');
+  }
+
+  // Navigate to comments page
+  void openComments() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CommentPage(postId: widget.post.id),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +91,7 @@ class PostCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              post.title,
+              widget.post.title,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -25,14 +99,44 @@ class PostCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "Posted by ${post.user}",
+              "Posted by ${widget.post.user}",
               style: TextStyle(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
-              post.content, // Make sure 'content' maps to 'fullContent' as discussed
+              widget.post.content,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 16),
+            // Like, Comment, and Share Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Like button
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? Colors.red : Colors.grey,
+                      ),
+                      onPressed: toggleLike,
+                    ),
+                    Text('$likeCount likes'),
+                  ],
+                ),
+                // Comment button
+                IconButton(
+                  icon: const Icon(Icons.comment),
+                  onPressed: openComments,
+                ),
+                // Share button
+                IconButton(
+                  icon: const Icon(Icons.share),
+                  onPressed: sharePost,
+                ),
+              ],
             ),
           ],
         ),
@@ -40,4 +144,3 @@ class PostCard extends StatelessWidget {
     );
   }
 }
-
