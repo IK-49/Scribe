@@ -1,5 +1,6 @@
 // post_detail.dart
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../post/post.dart';
 
 class PostDetails extends StatelessWidget {
@@ -24,12 +25,12 @@ class PostDetails extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              "Posted by ${post.user} on Aug 18, 2024",
+              "Posted by ${post.user} on ${DateFormat('MMM dd, yyyy').format(post.createdAt.toDate())}",
               style: TextStyle(color: Colors.grey[600]),
             ),
             SizedBox(height: 20),
             Text(
-              post.fullContent,  // Display the full content instead of preview
+              post.content, // Display the full content instead of preview
               style: TextStyle(fontSize: 16),
             ),
           ],

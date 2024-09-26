@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../post/post.dart'; // Ensure this points to where the Post model is defined
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../post/post.dart';
 
 class PostCard extends StatelessWidget {
   final Post post;
@@ -10,8 +9,8 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      elevation: 4.0,
+      elevation: 2.0,
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -20,31 +19,25 @@ class PostCard extends StatelessWidget {
             Text(
               post.title,
               style: const TextStyle(
-                fontSize: 20.0,
                 fontWeight: FontWeight.bold,
+                fontSize: 20,
               ),
             ),
-            const SizedBox(height: 8.0),
+            const SizedBox(height: 8),
             Text(
-              "Posted by ${post.user} on ${formatDate(post.createdAt)}",
-              style: TextStyle(color: Colors.grey[600], fontSize: 14.0),
+              "Posted by ${post.user}",
+              style: TextStyle(color: Colors.grey[600]),
             ),
-            const SizedBox(height: 8.0),
+            const SizedBox(height: 8),
             Text(
-              post.fullContent.length > 100
-                  ? "${post.fullContent.substring(0, 100)}..." // Display a preview of the content
-                  : post.fullContent, // Display full content if it's short
-              style: const TextStyle(fontSize: 16.0),
+              post.content, // Make sure 'content' maps to 'fullContent' as discussed
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
       ),
     );
   }
-
-  // A helper function to format the date from a Firestore Timestamp
-  String formatDate(Timestamp timestamp) {
-    DateTime date = timestamp.toDate();
-    return "${date.month}/${date.day}/${date.year}"; // Example format: MM/DD/YYYY
-  }
 }
+

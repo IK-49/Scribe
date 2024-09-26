@@ -1,22 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
+  final String id;
   final String title;
-  final String fullContent;
+  final String content; // This should map to 'fullContent'
   final String user;
-  final Timestamp createdAt; // Firestore Timestamp
+  final Timestamp createdAt;
 
   Post({
+    required this.id,
     required this.title,
-    required this.fullContent,
+    required this.content, // Should use 'fullContent' from Firestore
     required this.user,
     required this.createdAt,
   });
 
-  factory Post.fromJson(Map<String, dynamic> json) {
+  factory Post.fromJson(Map<String, dynamic> json, String id) {
     return Post(
+      id: id,
       title: json['title'],
-      fullContent: json['fullContent'],
+      content: json['fullContent'], // Map 'fullContent' instead of 'content'
       user: json['user'],
       createdAt: json['createdAt'],
     );

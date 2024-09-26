@@ -23,14 +23,15 @@ class _FeedState extends State<Feed> {
     // No need to call getPosts() here since StreamBuilder will handle it
   }
 
-  // Fetch posts from Firestore in a stream
   Stream<List<Post>> getPosts() {
     return FirebaseFirestore.instance
         .collection('posts')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Post.fromJson(doc.data())).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) =>
+                Post.fromJson(doc.data(), doc.id)) // Pass doc.id if needed
+            .toList());
   }
 
   @override
@@ -62,7 +63,8 @@ class _FeedState extends State<Feed> {
                     ),
                   );
                 },
-                child: PostCard(post: post), // Ensure PostCard widget is defined
+                child:
+                    PostCard(post: post), // Ensure PostCard widget is defined
               );
             },
           );
