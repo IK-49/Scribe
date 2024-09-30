@@ -96,7 +96,7 @@ class _PostCardState extends State<PostCard> {
     final Color randomColor = postColors[random.nextInt(postColors.length)];
     return Card(
       elevation: 2.0,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      margin: const EdgeInsets.symmetric(vertical: 32, horizontal: 48),
       color: randomColor,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
