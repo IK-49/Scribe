@@ -14,7 +14,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  bool _isExpanded = false; // Controls the visibility of the overlay box
   String prompt = 'Loading...'; // Placeholder text for the prompt
 
   static const List<Widget> _pages = <Widget>[
@@ -26,7 +25,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    _getDailyPrompt(); // Fetch the prompt when the app starts
   }
 
   void _onItemTapped(int index) {
@@ -35,21 +33,6 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  Future<void> _getDailyPrompt() async {
-    final response =
-        await http.get(Uri.parse('https://aarikg.pythonanywhere.com/pick'));
-    if (response.statusCode == 200) {
-      Map json = jsonDecode(response.body);
-      setState(() {
-        prompt = json[
-            'todaysPick']; // Replace the placeholder with the actual prompt
-      });
-    } else {
-      setState(() {
-        prompt = 'Error fetching prompt';
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,51 +69,6 @@ class _MainScreenState extends State<MainScreen> {
                 child: _pages[_selectedIndex],
               ),
             ],
-          ),
-          // Positioned overlay button and expanding box
-          Positioned(
-            top: 10, // Position it below the app bar
-            left: 0,
-            right: 0,
-            child: Column(
-              children: [
-                // Circular arrow icon button in the center
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isExpanded = !_isExpanded;
-                    });
-                  },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blue,
-                    radius: 25,
-                    child: Icon(
-                      _isExpanded ? Icons.expand_less : Icons.expand_more,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                // Expanding box when the arrow is pressed
-                if (_isExpanded)
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    padding: EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 224, 211, 211),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      prompt, // Display the fetched prompt here
-                      style: TextStyle(
-                        color: Colors.black, // Adjusted for readability
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
           ),
         ],
       ),
