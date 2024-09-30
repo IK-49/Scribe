@@ -1,7 +1,7 @@
+import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
-import 'package:Scribe/main_pages/main_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NewPost extends StatefulWidget {
@@ -12,6 +12,21 @@ class NewPost extends StatefulWidget {
 class _NewPostState extends State<NewPost> {
   final quill.QuillController _controller = quill.QuillController.basic();
   final TextEditingController _titleController = TextEditingController();
+
+  // Generate a random pastel color
+  Color getRandomPastelColor() {
+    final random = Random();
+    int randomIndex = random.nextInt(6);
+    final List<Color> colors = [
+      Color(0xFFB3E5FC), // Light Blue
+      Color(0xFFF8BBD0), // Light Pink
+      Color(0xFFC8E6C9), // Light Green
+      Color(0xFFFFF9C4), // Light Yellow
+      Color(0xFFE1BEE7), // Light Lavender
+    ];
+
+    return colors[randomIndex];
+  }
 
   // Function to submit the post to Firestore
   Future<void> _submitPost() async {
@@ -24,27 +39,26 @@ class _NewPostState extends State<NewPost> {
     // Get the current logged-in user's display name
     final user = FirebaseAuth.instance.currentUser?.displayName ?? 'Anonymous';
 
+    // Generate a random color for the post
+    final color = getRandomPastelColor();
+
     // Reference to the Firestore collection 'posts'
     CollectionReference posts = FirebaseFirestore.instance.collection('posts');
 
-    // Add the post data to Firestore
+    // Add the post data to Firestore, including the random color
     await posts.add({
       'user': user,
       'title': postTitle,
       'preview': preview,
       'fullContent': postContent,
-      'createdAt': Timestamp.now(), // Store creation timestamp
+      'createdAt': Timestamp.now(),
       'likeCount': 0,
-      'likedBy': "",
+      'likedBy': [],
+      'color': color.value, // Store the color as an integer
     }).then((value) {
-      // Successfully added post, navigate to the main screen
       print('Post Added');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MainScreen()),
-      );
+      Navigator.pop(context); // Go back after adding the post
     }).catchError((error) {
-      // Error occurred during adding the post
       print("Failed to add post: $error");
     });
   }

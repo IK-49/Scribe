@@ -1,9 +1,9 @@
-import 'package:Scribe/post/post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../post/post.dart';
-import '../post/post_details.dart'; // Import the PostDetails screen
-import '../post/new_post.dart'; // Assuming you're using this somewhere
+import '../post/post_card.dart';
+import '../post/post_details.dart';
+import '../post/new_post.dart';
 
 class Feed extends StatefulWidget {
   const Feed({super.key});
@@ -13,22 +13,13 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
-  String feed = '';
-  List<Post> posts = [];
-  String selectedFilter = 'Recent'; // Default filter option
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Stream<List<Post>> getPosts() {
     return FirebaseFirestore.instance
         .collection('posts')
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
-            .map((doc) => Post.fromJson(doc.data(), doc.id)) // Pass doc.id if needed
+            .map((doc) => Post.fromJson(doc.data(), doc.id))
             .toList());
   }
 
@@ -38,7 +29,7 @@ class _FeedState extends State<Feed> {
       body: Stack(
         children: [
           StreamBuilder<List<Post>>(
-            stream: getPosts(), // Listening to Firestore updates
+            stream: getPosts(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return const Center(child: Text('Something went wrong'));
@@ -63,7 +54,7 @@ class _FeedState extends State<Feed> {
                         ),
                       );
                     },
-                    child: PostCard(post: post), // Ensure PostCard widget is defined
+                    child: PostCard(post: post),
                   );
                 },
               );

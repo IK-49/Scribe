@@ -1,9 +1,5 @@
-import 'dart:math';
-
-import 'package:Scribe/post/comment.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:flutter/material.dart';
 import '../post/post.dart';
 
 class PostCard extends StatefulWidget {
@@ -22,7 +18,6 @@ class _PostCardState extends State<PostCard> {
   @override
   void initState() {
     super.initState();
-    // Fetch initial like status and like count from Firestore
     fetchLikeStatus();
   }
 
@@ -35,7 +30,7 @@ class _PostCardState extends State<PostCard> {
     if (postSnapshot.exists) {
       setState(() {
         likeCount = postSnapshot['likeCount'] ?? 0;
-        isLiked = postSnapshot['likedBy'].contains('currentUserId'); // Replace 'currentUserId' with the actual user ID
+        isLiked = postSnapshot['likedBy'].contains('currentUserId');
       });
     }
   }
@@ -45,7 +40,6 @@ class _PostCardState extends State<PostCard> {
     final postRef = FirebaseFirestore.instance.collection('posts').doc(widget.post.id);
 
     if (isLiked) {
-      // If post is already liked, unlike it
       await postRef.update({
         'likeCount': FieldValue.increment(-1),
         'likedBy': FieldValue.arrayRemove(['currentUserId']),
@@ -55,7 +49,6 @@ class _PostCardState extends State<PostCard> {
         likeCount--;
       });
     } else {
-      // Like the post
       await postRef.update({
         'likeCount': FieldValue.increment(1),
         'likedBy': FieldValue.arrayUnion(['currentUserId']),
@@ -67,37 +60,12 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
-  // Share the post using the 'share_plus' package
-  void sharePost() {
-    Share.share('${widget.post.title}\n${widget.post.content}');
-  }
-
-  // Navigate to comments page
-  void openComments() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CommentPage(postId: widget.post.id),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final List<Color> postColors = [
-      Color(0xFFB3E5FC), // Light Blue
-      Color(0xFFF8BBD0), // Light Pink
-      Color(0xFFC8E6C9), // Light Green
-      Color(0xFFFFF9C4), // Light Yellow
-      Color(0xFFE1BEE7), // Light Lavender
-    ];
-
-    final Random random = Random();
-    final Color randomColor = postColors[random.nextInt(postColors.length)];
     return Card(
       elevation: 2.0,
-      margin: const EdgeInsets.symmetric(vertical: 32, horizontal: 48),
-      color: randomColor,
+      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+      color: widget.post.color ?? Colors.grey[300], // Use the stored color, fallback to grey
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -122,11 +90,9 @@ class _PostCardState extends State<PostCard> {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 16),
-            // Like, Comment, and Share Row
             Row(
-             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Like button
                 Row(
                   children: [
                     IconButton(
@@ -138,16 +104,6 @@ class _PostCardState extends State<PostCard> {
                     ),
                     Text('$likeCount likes'),
                   ],
-                ),
-                // Comment button
-                IconButton(
-                  icon: const Icon(Icons.comment),
-                  onPressed: openComments,
-                ),
-                // Share button
-                IconButton(
-                  icon: const Icon(Icons.share),
-                  onPressed: sharePost,
                 ),
               ],
             ),
