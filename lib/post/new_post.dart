@@ -34,6 +34,8 @@ class _NewPostState extends State<NewPost> {
       'preview': preview,
       'fullContent': postContent,
       'createdAt': Timestamp.now(), // Store creation timestamp
+      'likeCount': 0,
+      'likedBy': "",
     }).then((value) {
       // Successfully added post, navigate to the main screen
       print('Post Added');

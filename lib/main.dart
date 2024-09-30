@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(); 
   runApp(MyApp());
 }
 
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
-    return MaterialApp(
+    return MaterialApp( 
       title: 'Scribe',
       theme: ThemeData(
         scaffoldBackgroundColor: Color.fromARGB(255, 245, 244, 255),

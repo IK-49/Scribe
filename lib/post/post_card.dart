@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:Scribe/post/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -82,9 +84,20 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Color> postColors = [
+      Color(0xFFB3E5FC), // Light Blue
+      Color(0xFFF8BBD0), // Light Pink
+      Color(0xFFC8E6C9), // Light Green
+      Color(0xFFFFF9C4), // Light Yellow
+      Color(0xFFE1BEE7), // Light Lavender
+    ];
+
+    final Random random = Random();
+    final Color randomColor = postColors[random.nextInt(postColors.length)];
     return Card(
       elevation: 2.0,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      color: randomColor,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -111,7 +124,7 @@ class _PostCardState extends State<PostCard> {
             const SizedBox(height: 16),
             // Like, Comment, and Share Row
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Like button
                 Row(

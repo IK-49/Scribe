@@ -20,7 +20,6 @@ class _FeedState extends State<Feed> {
   @override
   void initState() {
     super.initState();
-    // No need to call getPosts() here since StreamBuilder will handle it
   }
 
   Stream<List<Post>> getPosts() {
@@ -29,46 +28,64 @@ class _FeedState extends State<Feed> {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
-            .map((doc) =>
-                Post.fromJson(doc.data(), doc.id)) // Pass doc.id if needed
+            .map((doc) => Post.fromJson(doc.data(), doc.id)) // Pass doc.id if needed
             .toList());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<List<Post>>(
-        stream: getPosts(), // Listening to Firestore updates
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(child: Text('Something went wrong'));
-          }
+      body: Stack(
+        children: [
+          StreamBuilder<List<Post>>(
+            stream: getPosts(), // Listening to Firestore updates
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Center(child: Text('Something went wrong'));
+              }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          final posts = snapshot.data ?? [];
+              final posts = snapshot.data ?? [];
 
-          return ListView.builder(
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              final post = posts[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PostDetails(post: post),
-                    ),
+              return ListView.builder(
+                itemCount: posts.length,
+                itemBuilder: (context, index) {
+                  final post = posts[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PostDetails(post: post),
+                        ),
+                      );
+                    },
+                    child: PostCard(post: post), // Ensure PostCard widget is defined
                   );
                 },
-                child:
-                    PostCard(post: post), // Ensure PostCard widget is defined
               );
             },
-          );
-        },
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.15,
+              width: MediaQuery.of(context).size.height * 0.15,
+              child: FittedBox(
+                child: IconButton(
+                  icon: Icon(Icons.add_circle_outline),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => NewPost()));
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

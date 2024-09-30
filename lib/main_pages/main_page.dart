@@ -41,7 +41,8 @@ class _MainScreenState extends State<MainScreen> {
     if (response.statusCode == 200) {
       Map json = jsonDecode(response.body);
       setState(() {
-        prompt = json['todaysPick']; // Replace the placeholder with the actual prompt
+        prompt = json[
+            'todaysPick']; // Replace the placeholder with the actual prompt
       });
     } else {
       setState(() {
@@ -53,7 +54,9 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Scaffold defines the structure of the screen
       appBar: AppBar(
+        toolbarHeight: 50,
         backgroundColor: Color.fromARGB(255, 107, 99, 255),
         leading: Builder(
           builder: (BuildContext context) {
@@ -66,6 +69,13 @@ class _MainScreenState extends State<MainScreen> {
           },
         ),
         title: Text("Scribe"),
+        centerTitle: true,
+        /*shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+          ),
+        ),*/
       ),
       body: Stack(
         children: [
@@ -108,13 +118,13 @@ class _MainScreenState extends State<MainScreen> {
                     width: MediaQuery.of(context).size.width * 0.5,
                     padding: EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
-                      color: Colors.blueAccent.withOpacity(0.9),
+                      color: const Color.fromARGB(255, 224, 211, 211),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       prompt, // Display the fetched prompt here
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black, // Adjusted for readability
                         fontSize: 16,
                       ),
                     ),
@@ -131,12 +141,12 @@ class _MainScreenState extends State<MainScreen> {
             label: 'Feed',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Notifications',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -157,8 +167,10 @@ class _MainScreenState extends State<MainScreen> {
                     child: Text(
                       'Navigation' +
                           "\n\n Current User ID: " +
-                          FirebaseAuth.instance.currentUser!.displayName
-                              .toString(),
+                          (FirebaseAuth.instance.currentUser != null
+                              ? FirebaseAuth.instance.currentUser!.displayName
+                                  .toString()
+                              : 'Guest'),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
