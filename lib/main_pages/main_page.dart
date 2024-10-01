@@ -15,6 +15,10 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   String prompt = 'Loading...'; // Placeholder text for the prompt
+  bool _isExpanded = false; // Controls the visibility of the prompt
+  String todaysPrompt = "";
+  double _boxHeight = 0.0; // Controls height for animation
+  double _opacity = 0.0; // Controls opacity for animation
 
   static const List<Widget> _pages = <Widget>[
     Feed(),
@@ -25,6 +29,31 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    fetchPrompt();
+  }
+
+  Future<void> fetchPrompt() async {
+    final response = await http.get(Uri.parse('http://izadkhokhar.pythonanywhere.com/promptGenerate'));
+    if (response.statusCode == 200) {
+      setState(() {
+        todaysPrompt = json.decode(response.body)['todaysPrompt'];
+      });
+    } else {
+      throw Exception('Failed to load prompt');
+    }
+  }
+
+  void _togglePrompt() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+      if (_isExpanded) {
+        _boxHeight = 250.0;  // Set the expanded height
+        _opacity = 1.0;      // Make the content fully visible
+      } else {
+        _boxHeight = 0.0;    // Collapse the height to 0
+        _opacity = 0.0;      // Make the content invisible
+      }
+    });
   }
 
   void _onItemTapped(int index) {
@@ -33,14 +62,12 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Scaffold defines the structure of the screen
       appBar: AppBar(
         toolbarHeight: 50,
-        backgroundColor: Color.fromARGB(255, 107, 99, 255),
+        backgroundColor: const Color.fromARGB(255, 107, 99, 255),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -51,18 +78,11 @@ class _MainScreenState extends State<MainScreen> {
             );
           },
         ),
-        title: Text("Scribe"),
+        title: const Text("Scribe"),
         centerTitle: true,
-        /*shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(25),
-            bottomRight: Radius.circular(25),
-          ),
-        ),*/
       ),
       body: Stack(
         children: [
-          // Main screen content (Feed, Profile, Notifications)
           Column(
             children: [
               Expanded(
@@ -70,6 +90,98 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ],
           ),
+          // Button to show/hide the prompt, visible only on the Feed page
+          if (_selectedIndex == 0)
+            Positioned(
+              bottom: 40,
+              right: 50,
+              child: ElevatedButton(
+                onPressed: _togglePrompt,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  elevation: 10,
+                ),
+                child: Text(
+                  _isExpanded ? "Hide Today's Prompt" : "Show Today's Prompt",
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            ),
+          // Animated prompt box
+          if (_selectedIndex == 0)
+            Positioned(
+              top: 80, 
+              left: 20,
+              right: 20,
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 500), // Animation duration
+                curve: Curves.easeInOut, // Smooth animation curve
+                height: _boxHeight, // The animated height
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.blue.shade400, Colors.blue.shade200],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 15,
+                      spreadRadius: 1,
+                      offset: Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: AnimatedOpacity(
+                  duration: Duration(milliseconds: 500), // Same duration for smooth opacity change
+                  opacity: _opacity, // The animated opacity
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Today's Prompt",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        todaysPrompt,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          height: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 15),
+                      ElevatedButton(
+                        onPressed: _togglePrompt,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        child: Text(
+                          'Close',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -99,7 +211,7 @@ class _MainScreenState extends State<MainScreen> {
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   DrawerHeader(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.blue,
                     ),
                     child: Text(
@@ -109,29 +221,29 @@ class _MainScreenState extends State<MainScreen> {
                               ? FirebaseAuth.instance.currentUser!.displayName
                                   .toString()
                               : 'Guest'),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                       ),
                     ),
                   ),
                   ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text('Home'),
+                    leading: const Icon(Icons.home),
+                    title: const Text('Home'),
                     onTap: () {
                       Navigator.pop(context);
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.person),
-                    title: Text('Profile'),
+                    leading: const Icon(Icons.person),
+                    title: const Text('Profile'),
                     onTap: () {
                       Navigator.pop(context);
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.settings),
-                    title: Text('Settings'),
+                    leading: const Icon(Icons.settings),
+                    title: const Text('Settings'),
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -140,7 +252,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () async {
                   await FirebaseAuth.instance.signOut();
@@ -149,7 +261,7 @@ class _MainScreenState extends State<MainScreen> {
                     MaterialPageRoute(builder: (context) => LandingPage()),
                   );
                 },
-                child: Text("Sign Out"),
+                child: const Text("Sign Out"),
               ),
             ),
           ],
