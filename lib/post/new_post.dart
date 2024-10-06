@@ -16,7 +16,7 @@ class _NewPostState extends State<NewPost> {
   // Generate a random pastel color
   Color getRandomPastelColor() {
     final random = Random();
-    int randomIndex = random.nextInt(6);
+    int randomIndex = random.nextInt(5);
     final List<Color> colors = [
       Color(0xFFB3E5FC), // Light Blue
       Color(0xFFF8BBD0), // Light Pink

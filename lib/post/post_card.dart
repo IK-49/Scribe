@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart'; // Import Share Plus
 import '../post/post.dart';
+import '../post/post_details.dart'; // Import the PostDetails page
 
 class PostCard extends StatefulWidget {
   final Post post;
+  final VoidCallback onCommentPressed; // Add callback for comment button
 
-  const PostCard({Key? key, required this.post}) : super(key: key);
+  const PostCard({Key? key, required this.post, required this.onCommentPressed}) : super(key: key);
 
   @override
   _PostCardState createState() => _PostCardState();
@@ -21,7 +24,6 @@ class _PostCardState extends State<PostCard> {
     fetchLikeStatus();
   }
 
-  // Fetch the current like count and whether the user has liked the post
   void fetchLikeStatus() async {
     final postSnapshot = await FirebaseFirestore.instance
         .collection('posts')
@@ -35,7 +37,6 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
-  // Toggle the like status and update Firestore
   void toggleLike() async {
     final postRef = FirebaseFirestore.instance.collection('posts').doc(widget.post.id);
 
@@ -60,12 +61,17 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
+  // Share post logic
+  void sharePost() {
+    Share.share(widget.post.content);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 2.0,
       margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-      color: widget.post.color ?? Colors.grey[300], // Use the stored color, fallback to grey
+      color: widget.post.color ?? Colors.grey[300],
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -91,19 +97,23 @@ class _PostCardState extends State<PostCard> {
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end, // Align buttons to the right
               children: [
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        isLiked ? Icons.favorite : Icons.favorite_border,
-                        color: isLiked ? Colors.red : Colors.grey,
-                      ),
-                      onPressed: toggleLike,
-                    ),
-                    Text('$likeCount likes'),
-                  ],
+                IconButton(
+                  icon: Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: isLiked ? Colors.red : Colors.grey,
+                  ),
+                  onPressed: toggleLike,
+                ),
+                Text('$likeCount likes'),
+                IconButton(
+                  icon: const Icon(Icons.comment),
+                  onPressed: widget.onCommentPressed, // Navigate to comments
+                ),
+                IconButton(
+                  icon: const Icon(Icons.share),
+                  onPressed: sharePost, // Native sharing
                 ),
               ],
             ),

@@ -1,3 +1,4 @@
+import 'package:Scribe/post/new_post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Scribe/login_pages/landing_page.dart';
@@ -33,7 +34,8 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> fetchPrompt() async {
-    final response = await http.get(Uri.parse('http://izadkhokhar.pythonanywhere.com/promptGenerate'));
+    final response = await http
+        .get(Uri.parse('http://izadkhokhar.pythonanywhere.com/promptGenerate'));
     if (response.statusCode == 200) {
       setState(() {
         todaysPrompt = json.decode(response.body)['todaysPrompt'];
@@ -47,11 +49,11 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _isExpanded = !_isExpanded;
       if (_isExpanded) {
-        _boxHeight = 250.0;  // Set the expanded height
-        _opacity = 1.0;      // Make the content fully visible
+        _boxHeight = 250.0; // Set the expanded height
+        _opacity = 1.0; // Make the content fully visible
       } else {
-        _boxHeight = 0.0;    // Collapse the height to 0
-        _opacity = 0.0;      // Make the content invisible
+        _boxHeight = 0.0; // Collapse the height to 0
+        _opacity = 0.0; // Make the content invisible
       }
     });
   }
@@ -98,7 +100,8 @@ class _MainScreenState extends State<MainScreen> {
               child: ElevatedButton(
                 onPressed: _togglePrompt,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 24.0),
                   backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
@@ -114,74 +117,83 @@ class _MainScreenState extends State<MainScreen> {
           // Animated prompt box
           if (_selectedIndex == 0)
             Positioned(
-              top: 80, 
-              left: 20,
-              right: 20,
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 500), // Animation duration
-                curve: Curves.easeInOut, // Smooth animation curve
-                height: _boxHeight, // The animated height
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.blue.shade400, Colors.blue.shade200],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+                bottom: 20, // Distance from the bottom of the screen
+                right: 20, // Distance from the right of the screen
+                child: FloatingActionButton(onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => NewPost()));
+                })),
+          Positioned(
+            top: 80,
+            left: 20,
+            right: 20,
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 500), // Animation duration
+              curve: Curves.easeInOut, // Smooth animation curve
+              height: _boxHeight, // The animated height
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.blue.shade400, Colors.blue.shade200],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 15,
+                    spreadRadius: 1,
+                    offset: Offset(0, 10),
                   ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 15,
-                      spreadRadius: 1,
-                      offset: Offset(0, 10),
+                ],
+              ),
+              child: AnimatedOpacity(
+                duration: Duration(
+                    milliseconds:
+                        500), // Same duration for smooth opacity change
+                opacity: _opacity, // The animated opacity
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Today's Prompt",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      todaysPrompt,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 15),
+                    ElevatedButton(
+                      onPressed: _togglePrompt,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: Text(
+                        'Close',
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                   ],
                 ),
-                child: AnimatedOpacity(
-                  duration: Duration(milliseconds: 500), // Same duration for smooth opacity change
-                  opacity: _opacity, // The animated opacity
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Today's Prompt",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        todaysPrompt,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          height: 1.5,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 15),
-                      ElevatedButton(
-                        onPressed: _togglePrompt,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        child: Text(
-                          'Close',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ),
             ),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

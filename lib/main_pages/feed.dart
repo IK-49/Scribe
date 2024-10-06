@@ -14,11 +14,6 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Stream<List<Post>> getPosts() {
     return FirebaseFirestore.instance
         .collection('posts')
@@ -53,11 +48,22 @@ class _FeedState extends State<Feed> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PostDetails(post: post),
+                    builder: (context) => PostDetails(post: post), // On tap of the card
                   ),
                 );
               },
-              child: PostCard(post: post),
+              child: PostCard(
+                post: post,
+                onCommentPressed: () {
+                  // Navigate to PostDetails page when comment button is pressed
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PostDetails(post: post),
+                    ),
+                  );
+                },
+              ),
             );
           },
         );
