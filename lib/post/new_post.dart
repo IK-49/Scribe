@@ -30,7 +30,8 @@ class _NewPostState extends State<NewPost> {
 
   // Function to submit the post to Firestore
   Future<void> _submitPost() async {
-    final postContent = _controller.document.toPlainText(); // Get plain text content
+    final postContent =
+        _controller.document.toPlainText(); // Get plain text content
     final postTitle = _titleController.text; // Get post title
     final preview = postContent.length > 30
         ? postContent.substring(0, 30) + '...'

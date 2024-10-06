@@ -92,11 +92,26 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ],
           ),
-          // Button to show/hide the prompt, visible only on the Feed page
+          // New Post button (now in the bottom-right corner)
           if (_selectedIndex == 0)
             Positioned(
               bottom: 40,
               right: 50,
+              child: FloatingActionButton(
+                child: Icon(Icons.create),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => NewPost()));
+                },
+              ),
+            ),
+          // Show/Hide Today's Prompt button (now in the bottom center)
+          if (_selectedIndex == 0)
+            Positioned(
+              bottom: MediaQuery.of(context).size.height * 0.03, // Move it up slightly from the bottom
+              left:
+                  MediaQuery.of(context).size.width * 0.25, // Adjust alignment
+              right: MediaQuery.of(context).size.width * 0.25,
               child: ElevatedButton(
                 onPressed: _togglePrompt,
                 style: ElevatedButton.styleFrom(
@@ -115,14 +130,6 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           // Animated prompt box
-          if (_selectedIndex == 0)
-            Positioned(
-                bottom: 20, // Distance from the bottom of the screen
-                right: 20, // Distance from the right of the screen
-                child: FloatingActionButton(onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => NewPost()));
-                })),
           Positioned(
             top: 80,
             left: 20,
@@ -149,9 +156,7 @@ class _MainScreenState extends State<MainScreen> {
                 ],
               ),
               child: AnimatedOpacity(
-                duration: Duration(
-                    milliseconds:
-                        500), // Same duration for smooth opacity change
+                duration: Duration(milliseconds: 500), // Smooth opacity change
                 opacity: _opacity, // The animated opacity
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
