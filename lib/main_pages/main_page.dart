@@ -7,6 +7,7 @@ import 'profile.dart';
 import 'notifications.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'writing_tips.dart'; // <-- Add this import for the new page
 
 class MainScreen extends StatefulWidget {
   @override
@@ -108,7 +109,8 @@ class _MainScreenState extends State<MainScreen> {
           // Show/Hide Today's Prompt button (now in the bottom center)
           if (_selectedIndex == 0)
             Positioned(
-              bottom: MediaQuery.of(context).size.height * 0.03, // Move it up slightly from the bottom
+              bottom: MediaQuery.of(context).size.height *
+                  0.03, // Move it up slightly from the bottom
               left:
                   MediaQuery.of(context).size.width * 0.25, // Adjust alignment
               right: MediaQuery.of(context).size.width * 0.25,
@@ -263,6 +265,17 @@ class _MainScreenState extends State<MainScreen> {
                     title: const Text('Settings'),
                     onTap: () {
                       Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.edit),
+                    title: const Text('Writing Tips'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WritingTipsPage()),
+                      );
                     },
                   ),
                 ],
