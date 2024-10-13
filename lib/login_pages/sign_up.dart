@@ -1,4 +1,3 @@
-import 'package:Scribe/main_pages/feed.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:Scribe/main_pages/main_page.dart';

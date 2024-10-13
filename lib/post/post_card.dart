@@ -1,8 +1,7 @@
+import 'package:Scribe/post/post.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart'; // Import Share Plus
-import '../post/post.dart';
-import '../post/post_details.dart'; // Import the PostDetails page
 
 class PostCard extends StatefulWidget {
   final Post post;
