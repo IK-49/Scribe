@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
+
 
 class NewPost extends StatefulWidget {
   @override
@@ -26,6 +29,21 @@ class _NewPostState extends State<NewPost> {
     ];
 
     return colors[randomIndex];
+  }
+
+  String prompt = '';
+
+  Future<String> fetchPrompt() async {
+    final response = await http
+        .get(Uri.parse('http://izadkhokhar.pythonanywhere.com/promptGenerate'));
+    if (response.statusCode == 200) {
+      setState(() {
+        prompt = json.decode(response.body)['todaysPrompt'];
+      });
+    } else {
+      throw Exception('Failed to load prompt');
+    }
+    return prompt;
   }
 
   // Function to submit the post to Firestore
@@ -55,7 +73,8 @@ class _NewPostState extends State<NewPost> {
       'createdAt': Timestamp.now(),
       'likeCount': 0,
       'likedBy': [],
-      'color': color.value, // Store the color as an integer
+      'color': color.value,
+      'prompt': await fetchPrompt(),
     }).then((value) {
       print('Post Added');
       Navigator.pop(context); // Go back after adding the post
