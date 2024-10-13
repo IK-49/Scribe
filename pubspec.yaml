@@ -1,10 +1,10 @@
 name: Scribe
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  sdk: ">=3.4.3 <4.0.0"
 
 dependencies:
   flutter_quill: 10.5.14
@@ -33,7 +33,12 @@ flutter:
     - assets/
 
 fonts:
-    - family: RubicMonicOne
-      fonts:
-        - asset: assets/fonts/assets/fonts/RubikMonoOne-Regular.ttf
-          style: 
+  - family: RubicMonicOne
+    fonts:
+      - asset: fonts/RubikMonoOne-Regular.ttf
+  - family: PlayfairDisplay
+    fonts:
+      - asset: fonts/PlayfairDisplay-Regular.ttf
+  - family: LexendDeca
+    fonts:
+      - asset: fonts/LexendDeca-VariableFont_wght.ttf

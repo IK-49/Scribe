@@ -70,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 50,
-        backgroundColor: const Color.fromARGB(255, 107, 99, 255),
+        backgroundColor: Colors.blue,
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -81,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
             );
           },
         ),
-        title: const Text("Scribe"),
+        title: const Text("Scribe", style: TextStyle(fontFamily: "LexendDeca", ),),
         centerTitle: true,
       ),
       body: Stack(
@@ -261,13 +261,6 @@ class _MainScreenState extends State<MainScreen> {
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.settings),
-                    title: const Text('Settings'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
                     leading: const Icon(Icons.edit),
                     title: const Text('Writing Tips'),
                     onTap: () {
@@ -276,6 +269,13 @@ class _MainScreenState extends State<MainScreen> {
                         MaterialPageRoute(
                             builder: (context) => WritingTipsPage()),
                       );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.settings),
+                    title: const Text('Settings'),
+                    onTap: () {
+                      Navigator.pop(context);
                     },
                   ),
                 ],
