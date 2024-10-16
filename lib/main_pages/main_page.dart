@@ -1,4 +1,3 @@
-import 'package:Scribe/main_pages/settings.dart';
 import 'package:Scribe/post/new_post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +22,9 @@ class _MainScreenState extends State<MainScreen> {
   double _boxHeight = 0.0; // Controls height for animation
   double _opacity = 0.0; // Controls opacity for animation
 
-  static const List<Widget> _pages = <Widget>[
-    Feed(),
-    ProfilePage(),
+  static List<Widget> _pages = <Widget>[
+    const Feed(),
+    const ProfilePage(),
     Notifications(),
   ];
 
@@ -82,12 +81,7 @@ class _MainScreenState extends State<MainScreen> {
             );
           },
         ),
-        title: const Text(
-          "Scribe",
-          style: TextStyle(
-            fontFamily: "LexendDeca",
-          ),
-        ),
+        title: const Text("Scribe", style: TextStyle(fontFamily: "LexendDeca", ),),
         centerTitle: true,
       ),
       body: Stack(
@@ -256,9 +250,6 @@ class _MainScreenState extends State<MainScreen> {
                     leading: const Icon(Icons.home),
                     title: const Text('Home'),
                     onTap: () {
-                      setState(() {
-                        _selectedIndex = 0;
-                      });
                       Navigator.pop(context);
                     },
                   ),
@@ -266,9 +257,6 @@ class _MainScreenState extends State<MainScreen> {
                     leading: const Icon(Icons.person),
                     title: const Text('Profile'),
                     onTap: () {
-                      setState(() {
-                        _selectedIndex = 1;
-                      });
                       Navigator.pop(context);
                     },
                   ),
@@ -287,11 +275,7 @@ class _MainScreenState extends State<MainScreen> {
                     leading: const Icon(Icons.settings),
                     title: const Text('Settings'),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SettingsPage()),
-                      );
+                      Navigator.pop(context);
                     },
                   ),
                 ],
