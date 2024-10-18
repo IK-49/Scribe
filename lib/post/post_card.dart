@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart'; // Import Share Plus
 import '../post/post.dart';
@@ -8,7 +10,8 @@ class PostCard extends StatefulWidget {
   final Post post;
   final VoidCallback onCommentPressed; // Add callback for comment button
 
-  const PostCard({Key? key, required this.post, required this.onCommentPressed}) : super(key: key);
+  const PostCard({Key? key, required this.post, required this.onCommentPressed})
+      : super(key: key);
 
   @override
   _PostCardState createState() => _PostCardState();
@@ -38,12 +41,16 @@ class _PostCardState extends State<PostCard> {
   }
 
   void toggleLike() async {
-    final postRef = FirebaseFirestore.instance.collection('posts').doc(widget.post.id);
+    final postRef =
+        FirebaseFirestore.instance.collection('posts').doc(widget.post.id);
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final postSnapshot = await postRef.get();
+    final postOwnerId = postSnapshot['user'];
 
     if (isLiked) {
       await postRef.update({
         'likeCount': FieldValue.increment(-1),
-        'likedBy': FieldValue.arrayRemove(['currentUserId']),
+        'likedBy': FieldValue.arrayRemove([userId]),
       });
       setState(() {
         isLiked = false;
@@ -52,8 +59,17 @@ class _PostCardState extends State<PostCard> {
     } else {
       await postRef.update({
         'likeCount': FieldValue.increment(1),
-        'likedBy': FieldValue.arrayUnion(['currentUserId']),
+        'likedBy': FieldValue.arrayUnion([userId]),
       });
+
+      // Add notification for the post owner
+      await FirebaseFirestore.instance.collection('notifications').add({
+        'userId': postOwnerId,
+        'message':
+            '${FirebaseAuth.instance.currentUser!.displayName} liked your post: ${widget.post.title}',
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
       setState(() {
         isLiked = true;
         likeCount++;
@@ -97,7 +113,8 @@ class _PostCardState extends State<PostCard> {
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end, // Align buttons to the right
+              mainAxisAlignment:
+                  MainAxisAlignment.end, // Align buttons to the right
               children: [
                 IconButton(
                   icon: Icon(
