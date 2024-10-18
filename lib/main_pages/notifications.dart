@@ -3,53 +3,52 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Notifications extends StatelessWidget {
+  const Notifications({super.key});
+
+  Stream<List<Map<String, dynamic>>> _fetchNotifications() {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+
+    // Correct the Firestore path to match your rules (notifications/{userId}/userNotifications)
+    return FirebaseFirestore.instance
+        .collection('notifications')
+        .doc(userId)
+        .collection('userNotifications')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => doc.data())
+            .toList());
+  }
+
   @override
   Widget build(BuildContext context) {
-    final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
-
     return Scaffold(
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('notifications')
-            .doc(currentUserId)
-            .collection('userNotifications')
-            .orderBy('timestamp', descending: true)
-            .snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      body: StreamBuilder<List<Map<String, dynamic>>>(
+        stream: _fetchNotifications(),
+        builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error loading notifications'));
-          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.notifications_off, size: 100, color: Colors.grey),
-                  SizedBox(height: 20),
-                  Text(
-                    'No notifications yet',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ],
-              ),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
-
-          final notifications = snapshot.data!.docs;
-
+          if (snapshot.hasError) {
+            return const Center(child: Text("Something went wrong!"));
+          }
+          final notifications = snapshot.data ?? [];
+          if (notifications.isEmpty) {
+            return const Center(child: Text("No notifications."));
+          }
           return ListView.builder(
             itemCount: notifications.length,
             itemBuilder: (context, index) {
-              var notification = notifications[index];
+              final notification = notifications[index];
+
+              // Handle the createdAt field safely
+              final createdAt = notification['createdAt'] != null
+                  ? (notification['createdAt'] as Timestamp).toDate()
+                  : DateTime.now(); // Fallback to current time if missing
+
               return ListTile(
-                leading: Icon(Icons.favorite, color: Colors.redAccent),
-                title: Text('Your post was liked!'),
-                subtitle: Text('Liked by: ${notification['likedBy']}'),
-                trailing: Text(
-                  notification['timestamp'].toDate().toString(),
-                  style: TextStyle(fontSize: 12),
-                ),
+                title: Text(notification['message'] ?? 'No message'),
+                subtitle: Text(createdAt.toString()),
               );
             },
           );

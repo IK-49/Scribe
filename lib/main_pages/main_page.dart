@@ -25,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
 
   static List<Widget> _pages = <Widget>[
     const Feed(),
-    const ProfilePage(),
+    ProfilePage(),
     Notifications(),
   ];
 

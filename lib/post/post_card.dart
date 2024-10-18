@@ -1,13 +1,15 @@
 import 'package:Scribe/post/post.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart'; // Import Share Plus
 
 class PostCard extends StatefulWidget {
   final Post post;
-  final VoidCallback onCommentPressed; // Add callback for comment button
+  final VoidCallback onCommentPressed;
 
-  const PostCard({Key? key, required this.post, required this.onCommentPressed}) : super(key: key);
+  const PostCard({Key? key, required this.post, required this.onCommentPressed})
+      : super(key: key);
 
   @override
   _PostCardState createState() => _PostCardState();
@@ -24,25 +26,37 @@ class _PostCardState extends State<PostCard> {
   }
 
   void fetchLikeStatus() async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
     final postSnapshot = await FirebaseFirestore.instance
         .collection('posts')
         .doc(widget.post.id)
         .get();
     if (postSnapshot.exists) {
+      final likedBy = List.from(postSnapshot['likedBy'] ?? []);
       setState(() {
         likeCount = postSnapshot['likeCount'] ?? 0;
-        isLiked = postSnapshot['likedBy'].contains('currentUserId');
+        isLiked = likedBy.contains(userId);
       });
     }
   }
 
+  bool isProcessing = false;
+
   void toggleLike() async {
-    final postRef = FirebaseFirestore.instance.collection('posts').doc(widget.post.id);
+    if (isProcessing) return;
+    isProcessing = true;
+
+    final userId =
+        FirebaseAuth.instance.currentUser?.uid; // Get the current user's ID
+    if (userId == null) return; // If the user is not logged in, do nothing
+
+    final postRef =
+        FirebaseFirestore.instance.collection('posts').doc(widget.post.id);
 
     if (isLiked) {
       await postRef.update({
         'likeCount': FieldValue.increment(-1),
-        'likedBy': FieldValue.arrayRemove(['currentUserId']),
+        'likedBy': FieldValue.arrayRemove([userId]), // Use actual user ID
       });
       setState(() {
         isLiked = false;
@@ -51,16 +65,19 @@ class _PostCardState extends State<PostCard> {
     } else {
       await postRef.update({
         'likeCount': FieldValue.increment(1),
-        'likedBy': FieldValue.arrayUnion(['currentUserId']),
+        'likedBy': FieldValue.arrayUnion([userId]), // Use actual user ID
       });
       setState(() {
         isLiked = true;
         likeCount++;
       });
     }
+
+    Future.delayed(Duration(milliseconds: 300), () {
+      isProcessing = false;
+    });
   }
 
-  // Share post logic
   void sharePost() {
     Share.share(widget.post.content);
   }
@@ -96,7 +113,8 @@ class _PostCardState extends State<PostCard> {
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end, // Align buttons to the right
+              mainAxisAlignment:
+                  MainAxisAlignment.end, // Align buttons to the right
               children: [
                 IconButton(
                   icon: Icon(
