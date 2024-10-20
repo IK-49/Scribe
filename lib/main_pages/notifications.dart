@@ -6,12 +6,14 @@ class Notifications extends StatelessWidget {
   const Notifications({super.key});
 
   Stream<List<Map<String, dynamic>>> _fetchNotifications() {
-    final userId = FirebaseAuth.instance.currentUser?.displayName;
-    print(userId);
-    // Correct the Firestore path to match your rules (notifications/{userId}/userNotifications)
+    // Use the correct Firebase Auth UID
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    print("User ID: $userId"); // Debug to ensure you're getting the correct UID
+
+    // Query using the UID
     return FirebaseFirestore.instance
         .collection('notifications')
-        .doc(userId as String?)
+        .doc(userId) // Use the UID to access their specific notifications
         .collection('userNotifications')
         .orderBy('createdAt', descending: true)
         .snapshots()

@@ -79,7 +79,6 @@ class _PostCardState extends State<PostCard> {
         likeCount++;
       });
 
-      // Create a notification for the post creator, including if the liker is the creator
       FirebaseFirestore.instance
           .collection('notifications')
           .doc(
@@ -87,7 +86,7 @@ class _PostCardState extends State<PostCard> {
           .collection('userNotifications')
           .add({
         'createdAt': FieldValue.serverTimestamp(),
-        'message': userName + ' liked your post',
+        'message': '$userName liked your post', // Display name of the liker
         'isRead': false,
       });
     }
@@ -121,7 +120,7 @@ class _PostCardState extends State<PostCard> {
             ),
             const SizedBox(height: 8),
             Text(
-              "Posted by ${widget.post.user}",
+              "Posted by ${widget.post.displayName}",
               style: TextStyle(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),

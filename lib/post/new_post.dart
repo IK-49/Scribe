@@ -56,8 +56,9 @@ class _NewPostState extends State<NewPost> {
         : postContent; // Create a preview of the post
 
     // Get the current logged-in user's display name
-    final user = FirebaseAuth.instance.currentUser?.displayName ?? 'Anonymous';
-
+    final user = FirebaseAuth.instance.currentUser?.uid;
+    final displayName = FirebaseAuth.instance.currentUser?.displayName;
+    
     // Generate a random color for the post
     final color = getRandomPastelColor();
 
@@ -74,6 +75,7 @@ class _NewPostState extends State<NewPost> {
       'likeCount': 0,
       'likedBy': [],
       'color': color.value,
+      'displayName': displayName,
       'prompt': await fetchPrompt(),
     }).then((value) {
       print('Post Added');
