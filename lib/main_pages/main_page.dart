@@ -6,6 +6,7 @@ import 'package:Scribe/login_pages/landing_page.dart';
 import 'feed.dart';
 import 'profile.dart';
 import 'notifications.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Add Firestore to fetch unread notifications
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'writing_tips.dart'; // <-- Add this import for the new page
@@ -17,6 +18,8 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  bool _hasUnreadNotifications =
+      false; // To track if there are unread notifications
   String prompt = 'Loading...'; // Placeholder text for the prompt
   bool _isExpanded = false; // Controls the visibility of the prompt
   String todaysPrompt = "";
@@ -33,6 +36,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     fetchPrompt();
+    checkUnreadNotifications(); // Call this to check unread notifications
   }
 
   Future<void> fetchPrompt() async {
@@ -63,7 +67,51 @@ class _MainScreenState extends State<MainScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+
+      if (index == 2) {
+        // If notifications page is selected, mark notifications as read
+        markNotificationsAsRead();
+      }
     });
+  }
+
+  Future<void> checkUnreadNotifications() async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (userId != null) {
+      FirebaseFirestore.instance
+          .collection('notifications')
+          .doc(userId)
+          .collection('userNotifications')
+          .where('read', isEqualTo: false)
+          .snapshots()
+          .listen((snapshot) {
+        setState(() {
+          _hasUnreadNotifications = snapshot.docs.isNotEmpty;
+        });
+      });
+    }
+  }
+
+  Future<void> markNotificationsAsRead() async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (userId != null) {
+      final unreadNotifications = await FirebaseFirestore.instance
+          .collection('notifications')
+          .doc(userId)
+          .collection('userNotifications')
+          .where('read', isEqualTo: false)
+          .get();
+
+      for (var doc in unreadNotifications.docs) {
+        await doc.reference.update({'read': true});
+      }
+
+      setState(() {
+        _hasUnreadNotifications = false;
+      });
+    }
   }
 
   @override
@@ -210,17 +258,36 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Feed',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
+            icon: Stack(
+              children: [
+                const Icon(Icons.notifications),
+                if (_hasUnreadNotifications)
+                  Positioned(
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 12,
+                        minHeight: 12,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
             label: 'Notifications',
           ),
         ],

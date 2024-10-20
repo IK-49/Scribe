@@ -28,9 +28,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
       setState(() {
         totalPosts = postSnapshot.docs.length;
-        likesReceived = postSnapshot.docs
-            .map((doc) => doc['likes'] ?? 0)
-            .reduce((a, b) => a + b); // Calculate total likes
+
+        if (postSnapshot.docs.isNotEmpty) {
+          // Calculate total likes only if there are documents
+          likesReceived = postSnapshot.docs
+              .map((doc) => doc['likes'] ?? 0)
+              .reduce((a, b) => a + b);
+        } else {
+          likesReceived = 0; // If no documents, set likesReceived to 0
+        }
       });
     }
   }
@@ -81,7 +87,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Text(
                       user?.displayName ?? 'Anonymous',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     Text(user?.email ?? 'No email'),
                   ],

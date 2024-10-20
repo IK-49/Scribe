@@ -48,28 +48,47 @@ class _PostCardState extends State<PostCard> {
 
     final userId =
         FirebaseAuth.instance.currentUser?.uid; // Get the current user's ID
+    final userName = FirebaseAuth.instance.currentUser?.displayName ??
+        'Someone'; // Get user name or default to 'Someone'
     if (userId == null) return; // If the user is not logged in, do nothing
 
     final postRef =
         FirebaseFirestore.instance.collection('posts').doc(widget.post.id);
+    final postCreatorId =
+        widget.post.user; // Assuming this is the post creator's user ID
 
     if (isLiked) {
+      // Unlike the post
       await postRef.update({
         'likeCount': FieldValue.increment(-1),
-        'likedBy': FieldValue.arrayRemove([userId]), // Use actual user ID
+        'likedBy':
+            FieldValue.arrayRemove([userId]), // Remove user ID from 'likedBy'
       });
       setState(() {
         isLiked = false;
         likeCount--;
       });
     } else {
+      // Like the post
       await postRef.update({
         'likeCount': FieldValue.increment(1),
-        'likedBy': FieldValue.arrayUnion([userId]), // Use actual user ID
+        'likedBy': FieldValue.arrayUnion([userId]), // Add user ID to 'likedBy'
       });
       setState(() {
         isLiked = true;
         likeCount++;
+      });
+
+      // Create a notification for the post creator, including if the liker is the creator
+      FirebaseFirestore.instance
+          .collection('notifications')
+          .doc(
+              postCreatorId) // Correct user ID here, this should be post creator's ID
+          .collection('userNotifications')
+          .add({
+        'createdAt': FieldValue.serverTimestamp(),
+        'message': userName + ' liked your post',
+        'isRead': false,
       });
     }
 

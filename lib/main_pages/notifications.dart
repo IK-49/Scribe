@@ -6,18 +6,30 @@ class Notifications extends StatelessWidget {
   const Notifications({super.key});
 
   Stream<List<Map<String, dynamic>>> _fetchNotifications() {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
-
+    final userId = FirebaseAuth.instance.currentUser?.displayName;
+    print(userId);
     // Correct the Firestore path to match your rules (notifications/{userId}/userNotifications)
     return FirebaseFirestore.instance
         .collection('notifications')
-        .doc(userId)
+        .doc(userId as String?)
         .collection('userNotifications')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => doc.data())
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }
+
+  void _markNotificationsAsRead() async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final unreadNotifications = await FirebaseFirestore.instance
+        .collection('notifications')
+        .doc(userId)
+        .collection('userNotifications')
+        .where('isRead', isEqualTo: false)
+        .get();
+
+    for (var doc in unreadNotifications.docs) {
+      doc.reference.update({'isRead': true});
+    }
   }
 
   @override
@@ -33,6 +45,8 @@ class Notifications extends StatelessWidget {
             return const Center(child: Text("Something went wrong!"));
           }
           final notifications = snapshot.data ?? [];
+          print('Fetched notification: ${notifications}');
+
           if (notifications.isEmpty) {
             return const Center(child: Text("No notifications."));
           }
