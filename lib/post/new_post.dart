@@ -6,7 +6,6 @@ import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
-
 class NewPost extends StatefulWidget {
   @override
   _NewPostState createState() => _NewPostState();
@@ -46,7 +45,7 @@ class _NewPostState extends State<NewPost> {
     return prompt;
   }
 
-  // Function to submit the post to Firestore
+// Function to submit the post to Firestore
   Future<void> _submitPost() async {
     final postContent =
         _controller.document.toPlainText(); // Get plain text content
@@ -55,19 +54,21 @@ class _NewPostState extends State<NewPost> {
         ? postContent.substring(0, 30) + '...'
         : postContent; // Create a preview of the post
 
-    // Get the current logged-in user's display name
+    // Get the current logged-in user's userId and displayName
     final user = FirebaseAuth.instance.currentUser?.uid;
-    final displayName = FirebaseAuth.instance.currentUser?.displayName;
-    
+    final displayName =
+        FirebaseAuth.instance.currentUser?.displayName ?? 'Someone';
+
     // Generate a random color for the post
     final color = getRandomPastelColor();
 
     // Reference to the Firestore collection 'posts'
     CollectionReference posts = FirebaseFirestore.instance.collection('posts');
 
-    // Add the post data to Firestore, including the random color
+    // Add the post data to Firestore, including userId and displayName
     await posts.add({
       'user': user,
+      'displayName': displayName, // Ensure displayName is added here
       'title': postTitle,
       'preview': preview,
       'fullContent': postContent,
@@ -75,7 +76,6 @@ class _NewPostState extends State<NewPost> {
       'likeCount': 0,
       'likedBy': [],
       'color': color.value,
-      'displayName': displayName,
       'prompt': await fetchPrompt(),
     }).then((value) {
       print('Post Added');

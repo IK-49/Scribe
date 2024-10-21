@@ -123,7 +123,7 @@ class _MainScreenState extends State<MainScreen> {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: Icon(Icons.menu),
+              icon: Icon(Icons.menu, color: Colors.white,),
               onPressed: () {
                 Scaffold.of(context).openDrawer(); // Get context within Builder
               },
@@ -133,7 +133,7 @@ class _MainScreenState extends State<MainScreen> {
         title: const Text(
           "Scribe",
           style: TextStyle(
-            fontFamily: "LexendDeca",
+            color: Colors.white,
           ),
         ),
         centerTitle: true,
@@ -153,7 +153,8 @@ class _MainScreenState extends State<MainScreen> {
               bottom: 40,
               right: 50,
               child: FloatingActionButton(
-                child: Icon(Icons.create),
+                child: Icon(Icons.create, color: Colors.white,),
+                backgroundColor: Colors.blue,
                 onPressed: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => NewPost()));
@@ -308,7 +309,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     child: Text(
                       'Navigation' +
-                          "\n\n Current User ID: " +
+                          "\n\nCurrent User ID: " +
                           (FirebaseAuth.instance.currentUser != null
                               ? FirebaseAuth.instance.currentUser!.displayName
                                   .toString()
