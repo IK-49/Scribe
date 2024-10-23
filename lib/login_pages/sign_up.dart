@@ -97,7 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
             controller: _displayNameController,
             keyboardType: TextInputType.name,
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
               fontFamily: 'Roboto',
             ),
             decoration: InputDecoration(
@@ -150,7 +150,7 @@ class _SignUpPageState extends State<SignUpPage> {
             controller: _passwordController,
             obscureText: true,
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
               fontFamily: 'Roboto',
             ),
             decoration: InputDecoration(
