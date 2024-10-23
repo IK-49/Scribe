@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:Scribe/main_pages/streak_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
@@ -68,7 +69,7 @@ class _NewPostState extends State<NewPost> {
     // Add the post data to Firestore, including userId and displayName
     await posts.add({
       'user': user,
-      'displayName': displayName, // Ensure displayName is added here
+      'displayName': displayName,
       'title': postTitle,
       'preview': preview,
       'fullContent': postContent,
@@ -78,11 +79,15 @@ class _NewPostState extends State<NewPost> {
       'color': color.value,
       'prompt': await fetchPrompt(),
     }).then((value) {
-      print('Post Added');
-      Navigator.pop(context); // Go back after adding the post
+      // Immediately pop back to the previous screen after the post is submitted
+      Navigator.pop(context);
     }).catchError((error) {
       print("Failed to add post: $error");
     });
+
+    final streakService = StreakService();
+    streakService
+        .updateStreak();
   }
 
   @override

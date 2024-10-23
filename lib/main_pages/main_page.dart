@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // Add Firestore to fetch
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'writing_tips.dart'; // <-- Add this import for the new page
+import 'streak_calendar.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -338,6 +339,16 @@ class _MainScreenState extends State<MainScreen> {
                         _selectedIndex = 1; // Set to Feed page index
                       });
                       Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.calendar_month),
+                    title: const Text('Streaks'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => StreakCalendar()),
+                      );
                     },
                   ),
                   ListTile(
