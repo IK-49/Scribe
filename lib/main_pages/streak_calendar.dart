@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'streak_service.dart'; // Import your StreakService class here
+import 'streak_service.dart';
 
 class StreakCalendar extends StatefulWidget {
   @override
@@ -13,40 +13,31 @@ class _StreakCalendarState extends State<StreakCalendar> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   Set<DateTime> _streakDays = {};
-  int streakCount = 0; // Initialize streak count to 0
+  int streakCount = 0;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  late String userId; // Dynamically set user ID after auth
-
-  StreakService _streakService =
-      StreakService(); // Create an instance of StreakService
+  late String userId;
+  StreakService _streakService = StreakService();
 
   @override
   void initState() {
     super.initState();
-    userId = FirebaseAuth.instance.currentUser?.uid ?? 'null'; // Get user ID
+    userId = FirebaseAuth.instance.currentUser?.uid ?? 'null';
     _fetchStreaks();
   }
 
   Future<void> _fetchStreaks() async {
     if (userId == 'null') {
-      print("User not logged in"); // Ensure user is logged in before fetching
+      print("User not logged in");
       return;
     }
 
-    DocumentSnapshot userDoc =
-        await _firestore.collection('streaks').doc(userId).get();
+    DocumentSnapshot userDoc = await _firestore.collection('streaks').doc(userId).get();
     if (userDoc.exists) {
-      // Fetch `currentStreakCount` from Firestore
       int fetchedStreakCount = userDoc.get('currentStreakCount') ?? 0;
-      print(
-          "Fetched currentStreakCount: $fetchedStreakCount"); // Debugging line
-
-      // Fetch streak days for calendar display
       List<dynamic> streakDays = userDoc.get('streakDays') ?? [];
 
       setState(() {
-        // Update the streak count and days in the UI
         streakCount = fetchedStreakCount;
         _streakDays = streakDays.map((day) => DateTime.parse(day)).toSet();
       });
@@ -61,41 +52,62 @@ class _StreakCalendarState extends State<StreakCalendar> {
 
   Future<void> _testStreakUpdate() async {
     if (userId == 'null') {
-      print(
-          "User not logged in"); // Ensure user is logged in before updating streak
+      print("User not logged in");
       return;
     }
 
-    // Call the StreakService to update the streak with a test date
-    await _streakService.updateStreak(
-        testDate: DateTime(2024, 10, 27)); // Example test date
-    await _fetchStreaks(); // Fetch the updated streaks from Firestore
+    DateTime lastStreakDay;
+    if (_streakDays.isNotEmpty) {
+      lastStreakDay = _streakDays.reduce((a, b) => a.isAfter(b) ? a : b);
+    } else {
+      lastStreakDay = DateTime.now();
+    }
+
+    DateTime nextStreakDay = lastStreakDay.add(const Duration(days: 1));
+
+    streakCount += 1;
+    _streakDays.add(nextStreakDay);
+
+    List<String> streakDaysList = _streakDays.map((day) => day.toIso8601String()).toList();
+
+    await _firestore.collection('streaks').doc(userId).update({
+      'currentStreakCount': streakCount,
+      'streakDays': streakDaysList,
+      'lastActiveDate': nextStreakDay,
+    });
+
+    setState(() {
+      _focusedDay = nextStreakDay;
+    });
+
+    print("Streak updated. New streak day: $nextStreakDay");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Streak Calendar'),
+        title: const Text('Streak Calendar'),
+        centerTitle: true,
+        backgroundColor: Colors.indigoAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Display the streak count with a fire emoji
             Center(
               child: Text(
                 '$streakCount 🔥',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blueAccent,
+                  color: Colors.indigoAccent,
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-            // Calendar display
+            // Calendar
             TableCalendar(
               firstDay: DateTime.utc(2020, 1, 1),
               lastDay: DateTime.utc(2030, 12, 31),
@@ -106,7 +118,6 @@ class _StreakCalendarState extends State<StreakCalendar> {
                   _calendarFormat = format;
                 });
               },
-              // Disable day selection
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
                   _focusedDay = focusedDay;
@@ -124,13 +135,18 @@ class _StreakCalendarState extends State<StreakCalendar> {
                 },
               ),
             ),
+            const SizedBox(height: 20),
 
-            SizedBox(height: 20),
-
-            // Button to test streak updates
             ElevatedButton(
-              onPressed: _testStreakUpdate, // Trigger test streak update
-              child: Text('Test Streak Update'),
+              onPressed: _testStreakUpdate,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.indigoAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+              ),
+              child: const Text('Test Streak Update', style: TextStyle(color: Colors.white),),
             ),
           ],
         ),
@@ -142,13 +158,13 @@ class _StreakCalendarState extends State<StreakCalendar> {
     return Container(
       margin: const EdgeInsets.all(4.0),
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.green, // Color for streak days
+      decoration: const BoxDecoration(
+        color: Colors.green, // Streak days color
         shape: BoxShape.circle,
       ),
       child: Text(
         '${day.day}',
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
@@ -157,13 +173,13 @@ class _StreakCalendarState extends State<StreakCalendar> {
     return Container(
       margin: const EdgeInsets.all(4.0),
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Colors.blue, // Color for today's date
+      decoration: const BoxDecoration(
+        color: Colors.blue, // Today's date color
         shape: BoxShape.circle,
       ),
       child: Text(
         '${day.day}',
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }

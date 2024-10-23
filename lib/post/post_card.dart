@@ -1,8 +1,8 @@
-import 'package:Scribe/post/post.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart'; // Import Share Plus
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:Scribe/post/post.dart';
+import 'package:share_plus/share_plus.dart'; // Import Share Plus package
 
 class PostCard extends StatefulWidget {
   final Post post;
@@ -40,72 +40,46 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
-  bool isProcessing = false;
-
   void toggleLike() async {
-    if (isProcessing) return;
-    isProcessing = true;
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return;
 
-    final userId =
-        FirebaseAuth.instance.currentUser?.uid; // Get the current user's ID
-    final userName = FirebaseAuth.instance.currentUser?.displayName ??
-        'Someone'; // Get user name or default to 'Someone'
-    if (userId == null) return; // If the user is not logged in, do nothing
-
-    final postRef =
-        FirebaseFirestore.instance.collection('posts').doc(widget.post.id);
-    final postCreatorId =
-        widget.post.user; // Assuming this is the post creator's user ID
+    final postRef = FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.post.id);
 
     if (isLiked) {
-      // Unlike the post
       await postRef.update({
         'likeCount': FieldValue.increment(-1),
-        'likedBy':
-            FieldValue.arrayRemove([userId]), // Remove user ID from 'likedBy'
+        'likedBy': FieldValue.arrayRemove([userId]),
       });
       setState(() {
         isLiked = false;
         likeCount--;
       });
     } else {
-      // Like the post
       await postRef.update({
         'likeCount': FieldValue.increment(1),
-        'likedBy': FieldValue.arrayUnion([userId]), // Add user ID to 'likedBy'
+        'likedBy': FieldValue.arrayUnion([userId]),
       });
       setState(() {
         isLiked = true;
         likeCount++;
       });
-
-      FirebaseFirestore.instance
-          .collection('notifications')
-          .doc(
-              postCreatorId) // Correct user ID here, this should be post creator's ID
-          .collection('userNotifications')
-          .add({
-        'createdAt': FieldValue.serverTimestamp(),
-        'message': '$userName liked your post', // Display name of the liker
-        'isRead': false,
-      });
     }
-
-    Future.delayed(Duration(milliseconds: 300), () {
-      isProcessing = false;
-    });
   }
 
   void sharePost() {
-    Share.share(widget.post.content);
+    Share.share(widget.post.content);  // Share the post content
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2.0,
-      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-      color: widget.post.color ?? Colors.grey[300],
+      elevation: 4.0,
+      margin: const EdgeInsets.symmetric(vertical: 12.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      color: widget.post.color ?? Colors.grey[200], // Post color restored
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -114,8 +88,8 @@ class _PostCardState extends State<PostCard> {
             Text(
               widget.post.title,
               style: const TextStyle(
-                fontWeight: FontWeight.bold,
                 fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
@@ -123,7 +97,7 @@ class _PostCardState extends State<PostCard> {
               "Posted by ${widget.post.displayName}",
               style: TextStyle(color: Colors.grey[600]),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Text(
               widget.post.content,
               maxLines: 3,
@@ -131,24 +105,27 @@ class _PostCardState extends State<PostCard> {
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.end, // Align buttons to the right
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  icon: Icon(
-                    isLiked ? Icons.favorite : Icons.favorite_border,
-                    color: isLiked ? Colors.red : Colors.grey,
-                  ),
-                  onPressed: toggleLike,
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? Colors.red : Colors.grey,
+                      ),
+                      onPressed: toggleLike,
+                    ),
+                    Text('$likeCount likes'), // "likes" is now next to the count
+                  ],
                 ),
-                Text('$likeCount likes'),
                 IconButton(
                   icon: const Icon(Icons.comment),
-                  onPressed: widget.onCommentPressed, // Navigate to comments
+                  onPressed: widget.onCommentPressed,
                 ),
                 IconButton(
                   icon: const Icon(Icons.share),
-                  onPressed: sharePost, // Native sharing
+                  onPressed: sharePost,  // Share button to share post content
                 ),
               ],
             ),

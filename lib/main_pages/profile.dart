@@ -20,7 +20,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> fetchUserStats() async {
     if (user != null) {
-      // Fetch total posts made and likes received by the user
       QuerySnapshot postSnapshot = await FirebaseFirestore.instance
           .collection('posts')
           .where('userId', isEqualTo: user!.uid)
@@ -30,26 +29,23 @@ class _ProfilePageState extends State<ProfilePage> {
         totalPosts = postSnapshot.docs.length;
 
         if (postSnapshot.docs.isNotEmpty) {
-          // Calculate total likes only if there are documents
           likesReceived = postSnapshot.docs
               .map((doc) => doc['likes'] ?? 0)
               .reduce((a, b) => a + b);
         } else {
-          likesReceived = 0; // If no documents, set likesReceived to 0
+          likesReceived = 0;
         }
       });
     }
   }
 
   Future<List<Map<String, dynamic>>> fetchPostArchive() async {
-    // Fetch posts made by the user on previous prompts
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance
         .collection('posts')
         .where('userId', isEqualTo: user!.uid)
         .orderBy('promptDate', descending: true)
         .get();
 
-    // Map documents to a list of maps for easier rendering
     return postSnapshot.docs
         .map((doc) => {
               'prompt': doc['prompt'],
@@ -62,11 +58,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile'),
-      ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             // User Information
@@ -77,25 +70,28 @@ class _ProfilePageState extends State<ProfilePage> {
                         backgroundImage: NetworkImage(user!.photoURL!),
                         radius: 40,
                       )
-                    : CircleAvatar(
-                        child: Icon(Icons.person),
+                    : const CircleAvatar(
+                        child: Icon(Icons.person, size: 40),
                         radius: 40,
                       ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       user?.displayName ?? 'Anonymous',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    Text(user?.email ?? 'No email'),
+                    Text(user?.email ?? 'No email',
+                        style: TextStyle(color: Colors.grey[600])),
                   ],
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Post Statistics
             Row(
@@ -106,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Post Archive
             Expanded(
@@ -114,10 +110,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 future: fetchPostArchive(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No posts in the archive.'));
+                    return const Center(child: Text('No posts in the archive.'));
                   }
 
                   List<Map<String, dynamic>> posts = snapshot.data!;
@@ -126,10 +122,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     itemBuilder: (context, index) {
                       final post = posts[index];
                       return Card(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        elevation: 3,
                         child: ListTile(
                           title: Text(post['prompt']),
                           subtitle: Text(post['content']),
-                          trailing: Text(post['date'].toString()),
+                          trailing: Text(
+                            "${post['date'].day}-${post['date'].month}-${post['date'].year}",
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
                         ),
                       );
                     },
@@ -144,15 +149,35 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildStatCard(String label, int value) {
-    return Column(
-      children: [
-        Text(
-          value.toString(),
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+        child: Column(
+          children: [
+            Text(
+              value.toString(),
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.indigoAccent,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black54,
+              ),
+            ),
+          ],
         ),
-        SizedBox(height: 5),
-        Text(label),
-      ],
+      ),
     );
   }
 }

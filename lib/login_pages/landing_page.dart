@@ -10,29 +10,26 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
   Widget _buildLoginBtn() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 15.0),
-      width: MediaQuery.of(context).size.width * 0.75,
+    return SizedBox(
+      width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => LoginPage()));
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black,
-          padding: EdgeInsets.all(15.0),
+          backgroundColor: Colors.indigoAccent,
+          padding: const EdgeInsets.all(15.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(12.0),
           ),
         ),
-        child: Text(
+        child: const Text(
           'I already have an account',
           style: TextStyle(
             color: Colors.white,
-            letterSpacing: 1.5,
-            fontSize: 20.0,
+            fontSize: 18.0,
             fontWeight: FontWeight.bold,
-            fontFamily: 'Roboto',
           ),
         ),
       ),
@@ -40,29 +37,26 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildSignupBtn() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0),
-      width: MediaQuery.of(context).size.width * 0.75,
-      child: ElevatedButton(
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
         onPressed: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => SignUpPage()));
         },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          padding: EdgeInsets.all(15.0),
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Colors.white, width: 2.0),
+          padding: const EdgeInsets.all(15.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(12.0),
           ),
         ),
-        child: Text(
+        child: const Text(
           'Get Started',
           style: TextStyle(
-            color: Colors.black,
-            letterSpacing: 1.5,
-            fontSize: 20.0,
+            color: Colors.white,
+            fontSize: 18.0,
             fontWeight: FontWeight.bold,
-            fontFamily: 'Roboto',
           ),
         ),
       ),
@@ -78,44 +72,64 @@ class _LandingPageState extends State<LandingPage> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
             children: <Widget>[
-              // Solid color background
+              // Background gradient
               Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: Color.fromARGB(255, 58, 73, 238), // Set your preferred solid color here
-              ),
-              // Positioned large text in the background
-              Positioned(
-                top: 100,
-                left: 100,
-                right: 20,
-                child: Text(
-                  'The\nBest\nWriting\nApp', // The large white text
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 150.0, // Large font size
-                    fontFamily: "RubicMonoOne",
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white.withOpacity(1), // Transparent white to blend with background
-                    letterSpacing: 2.0,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xFF3F51B5), // Darker Indigo
+                      Color(0xFF536DFE), // Medium Indigo
+                      Color(0xFFB3E5FC), // Light Blue
+                    ],
                   ),
                 ),
               ),
-              Container(
-                height: double.infinity,
-                child: Center(
+              // Content
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      Spacer(),
-                      SizedBox(height: 60.0),
-                      // Removed the image
-                      SizedBox(height: 100),
-                      
-                      SizedBox(height: 10.0), // Space between the text and the button
+                      // App logo or main title
+                      const Text(
+                        'Scribe',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 50.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 2.0,
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      const Text(
+                        'Your Writing Companion',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      const SizedBox(height: 60.0),
+                      // Get Started Button
                       _buildSignupBtn(),
+                      const SizedBox(height: 20.0),
+                      // Login Button
                       _buildLoginBtn(),
-                      SizedBox(height: 40.0), // Space between the buttons and the bottom
+                      const SizedBox(height: 40.0),
+                      // Footer text
+                      const Text(
+                        'By continuing, you agree to our Terms & Conditions',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white60,
+                          fontSize: 12.0,
+                        ),
+                      ),
                     ],
                   ),
                 ),

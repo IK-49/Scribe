@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:Scribe/main_pages/main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:Scribe/main_pages/main_page.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -13,168 +12,65 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _displayNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Widget _buildEmailTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Email',
-          style: TextStyle(
-            color: Colors.white, // kLabelStyle replacement
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
-          ),
+  Widget _buildEmailTextField() {
+    return TextField(
+      controller: _emailController,
+      keyboardType: TextInputType.emailAddress,
+      style: const TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        labelText: 'Email',
+        labelStyle: const TextStyle(color: Colors.grey),
+        prefixIcon: const Icon(Icons.email, color: Colors.indigoAccent),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide.none,
         ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-            color: Colors.white, // kBoxDecorationStyle replacement
-            borderRadius: BorderRadius.circular(10.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 6.0,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          height: 60.0,
-          child: TextField(
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
-            style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'Roboto',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.email,
-                color: Colors.black,
-              ),
-              hintText: 'Enter your Email',
-              hintStyle: TextStyle(
-                color: Colors.black54, // kHintTextStyle replacement
-                fontFamily: 'OpenSans',
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  Widget _buildDisplayNameTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Username',
-          style: TextStyle(
-            color: Colors.white, // kLabelStyle replacement
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
-          ),
+  Widget _buildUsernameTextField() {
+    return TextField(
+      controller: _displayNameController,
+      keyboardType: TextInputType.text,
+      style: const TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        labelText: 'Username',
+        labelStyle: const TextStyle(color: Colors.grey),
+        prefixIcon: const Icon(Icons.person, color: Colors.indigoAccent),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide.none,
         ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-            color: Colors.white, // kBoxDecorationStyle replacement
-            borderRadius: BorderRadius.circular(10.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 6.0,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          height: 60.0,
-          child: TextField(
-            controller: _displayNameController,
-            keyboardType: TextInputType.name,
-            style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'Roboto',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.person,
-                color: Colors.black,
-              ),
-              hintText: 'Enter your Username',
-              hintStyle: TextStyle(
-                color: Colors.black54, // kHintTextStyle replacement
-                fontFamily: 'OpenSans',
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  Widget _buildPasswordTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Password',
-          style: TextStyle(
-            color: Colors.white, // kLabelStyle replacement
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
-          ),
+  Widget _buildPasswordTextField() {
+    return TextField(
+      controller: _passwordController,
+      obscureText: true,
+      style: const TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        labelText: 'Password',
+        labelStyle: const TextStyle(color: Colors.grey),
+        prefixIcon: const Icon(Icons.lock, color: Colors.indigoAccent),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide.none,
         ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-            color: Colors.white, // kBoxDecorationStyle replacement
-            borderRadius: BorderRadius.circular(10.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 6.0,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          height: 60.0,
-          child: TextField(
-            controller: _passwordController,
-            obscureText: true,
-            style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'Roboto',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.lock,
-                color: Colors.black,
-              ),
-              hintText: 'Enter your Password',
-              hintStyle: TextStyle(
-                color: Colors.black54, // kHintTextStyle replacement
-                fontFamily: 'OpenSans',
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  Widget _buildSignUpBtn() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
+  Widget _buildSignUpButton() {
+    return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () async {
@@ -187,37 +83,30 @@ class _SignUpPageState extends State<SignUpPage> {
                 .createUserWithEmailAndPassword(
                     email: email, password: password);
             User? user = FirebaseAuth.instance.currentUser;
-            await user?.updateProfile(displayName: displayName);
+            await user?.updateDisplayName(displayName);
             await user?.reload();
             user = FirebaseAuth.instance.currentUser;
-            print('User registered successfully!');
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MainScreen()));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MainScreen()),
+            );
           } on FirebaseAuthException catch (e) {
-            if (e.code == 'weak-password') {
-              print('The password provided is too weak.');
-            } else if (e.code == 'email-already-in-use') {
-              print('The account already exists for that email.');
-            } else {
-              print(e.code);
-            }
+            print('Error: ${e.message}');
           }
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black,
-          padding: EdgeInsets.all(15.0),
+          backgroundColor: Colors.indigoAccent,
+          padding: const EdgeInsets.all(15.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(12.0),
           ),
         ),
-        child: Text(
+        child: const Text(
           'SIGN UP',
           style: TextStyle(
             color: Colors.white,
-            letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
-            fontFamily: 'Roboto',
           ),
         ),
       ),
@@ -227,52 +116,40 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 58, 73, 238),
-                ),
-              ),
-              Container(
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 40.0,
-                    vertical: 120.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Roboto',
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 30.0),
-                      _buildEmailTF(),
-                      SizedBox(height: 20.0),
-                      _buildDisplayNameTF(),
-                      SizedBox(height: 20.0),
-                      _buildPasswordTF(),
-                      _buildSignUpBtn(),
-                    ],
-                  ),
-                ),
-              )
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFB3E5FC), // Light Blue
+              Color(0xFF536DFE), // Indigo Accent
             ],
           ),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 100.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            const Text(
+              'Create Account',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 32.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 40.0),
+            _buildEmailTextField(),
+            const SizedBox(height: 20.0),
+            _buildUsernameTextField(),
+            const SizedBox(height: 20.0),
+            _buildPasswordTextField(),
+            const SizedBox(height: 30.0),
+            _buildSignUpButton(),
+          ],
         ),
       ),
     );
