@@ -1,4 +1,5 @@
 import 'package:Scribe/login_pages/landing_page.dart';
+import 'package:Scribe/main_pages/leaderboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +8,6 @@ import 'settings.dart';
 import 'feed.dart';
 import 'profile.dart';
 import 'notifications.dart';
-import 'writing_tips.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -18,10 +18,11 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   bool _hasUnreadNotifications = false;
 
-  static List<Widget> _pages = <Widget>[
+  // Ensure the pages are correct
+  static final List<Widget> _pages = <Widget>[
     const Feed(),
     ProfilePage(),
-    Notifications(),
+    StreakCalendar(), // Correct StreakCalendar page
   ];
 
   @override
@@ -56,7 +57,7 @@ class _MainScreenState extends State<MainScreen> {
         preferredSize: const Size.fromHeight(70),
         child: AppBar(
           backgroundColor: Colors.white,
-          elevation: 4.0,  // Drop shadow for a modern effect
+          elevation: 4.0, // Drop shadow for a modern effect
           title: const Text(
             'Scribe',
             style: TextStyle(
@@ -69,7 +70,8 @@ class _MainScreenState extends State<MainScreen> {
           iconTheme: const IconThemeData(color: Colors.indigoAccent),
         ),
       ),
-      body: _pages[_selectedIndex],
+      body:
+          _pages[_selectedIndex], // This shows the correct page based on index
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.indigoAccent,
@@ -79,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
         iconSize: 28,
         onTap: (index) {
           setState(() {
-            _selectedIndex = index;
+            _selectedIndex = index; // This updates the selected page index
           });
         },
         items: [
@@ -93,29 +95,10 @@ class _MainScreenState extends State<MainScreen> {
             activeIcon: Icon(Icons.person),
             label: 'Profile',
           ),
-          BottomNavigationBarItem(
-            icon: Stack(
-              children: [
-                const Icon(Icons.notifications_none),
-                if (_hasUnreadNotifications)
-                  Positioned(
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 10,
-                        minHeight: 10,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            activeIcon: const Icon(Icons.notifications),
-            label: 'Notifications',
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            activeIcon: Icon(Icons.calendar_today),
+            label: 'Streaks', // Correct label for StreakCalendar page
           ),
         ],
       ),
@@ -159,15 +142,21 @@ class _MainScreenState extends State<MainScreen> {
               Navigator.pop(context);
             }),
             _buildDrawerItem(Icons.calendar_today, 'Streaks', () {
+              setState(() {
+                _selectedIndex = 2;
+              });
+              Navigator.pop(context);
+            }),
+            _buildDrawerItem(Icons.notifications, 'Notifications', () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => StreakCalendar()),
+                MaterialPageRoute(builder: (context) => Notifications()),
               );
             }),
-            _buildDrawerItem(Icons.edit, 'Writing Tips', () {
+            _buildDrawerItem(Icons.leaderboard, 'Leaderboard', () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => WritingTipsPage()),
+                MaterialPageRoute(builder: (context) => LeaderboardPage()),
               );
             }),
             _buildDrawerItem(Icons.settings, 'Settings', () {

@@ -70,7 +70,7 @@ class _PostDetailsState extends State<PostDetails> {
             ),
             SizedBox(height: 10),
             Text(
-              "Posted by ${widget.post.user} on ${DateFormat('MMM dd, yyyy').format(widget.post.createdAt.toDate())}",
+              "Posted by ${FirebaseAuth.instance.currentUser!.displayName.toString()} on ${DateFormat('MMM dd, yyyy').format(widget.post.createdAt.toDate())}",
               style: TextStyle(color: Colors.grey[600]),
             ),
             SizedBox(height: 20),

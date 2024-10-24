@@ -32,7 +32,8 @@ class _StreakCalendarState extends State<StreakCalendar> {
       return;
     }
 
-    DocumentSnapshot userDoc = await _firestore.collection('streaks').doc(userId).get();
+    DocumentSnapshot userDoc =
+        await _firestore.collection('streaks').doc(userId).get();
     if (userDoc.exists) {
       int fetchedStreakCount = userDoc.get('currentStreakCount') ?? 0;
       List<dynamic> streakDays = userDoc.get('streakDays') ?? [];
@@ -68,7 +69,8 @@ class _StreakCalendarState extends State<StreakCalendar> {
     streakCount += 1;
     _streakDays.add(nextStreakDay);
 
-    List<String> streakDaysList = _streakDays.map((day) => day.toIso8601String()).toList();
+    List<String> streakDaysList =
+        _streakDays.map((day) => day.toIso8601String()).toList();
 
     await _firestore.collection('streaks').doc(userId).update({
       'currentStreakCount': streakCount,
@@ -86,11 +88,6 @@ class _StreakCalendarState extends State<StreakCalendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Streak Calendar'),
-        centerTitle: true,
-        backgroundColor: Colors.indigoAccent,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -137,17 +134,21 @@ class _StreakCalendarState extends State<StreakCalendar> {
             ),
             const SizedBox(height: 20),
 
-            ElevatedButton(
+            /*ElevatedButton(
               onPressed: _testStreakUpdate,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.indigoAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 12.0, horizontal: 24.0),
               ),
-              child: const Text('Test Streak Update', style: TextStyle(color: Colors.white),),
-            ),
+              child: const Text(
+                'Test Streak Update',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),*/
           ],
         ),
       ),

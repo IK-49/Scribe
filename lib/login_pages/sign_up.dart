@@ -20,12 +20,17 @@ class _SignUpPageState extends State<SignUpPage> {
       decoration: InputDecoration(
         labelText: 'Email',
         labelStyle: const TextStyle(color: Colors.grey),
+        floatingLabelStyle: const TextStyle(color: Colors.indigoAccent),
         prefixIcon: const Icon(Icons.email, color: Colors.indigoAccent),
         filled: true,
         fillColor: Colors.white,
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+        contentPadding: const EdgeInsets.symmetric(
+            vertical: 24.0, horizontal: 16.0), // Increased vertical padding
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+              color: Colors.transparent, width: 2), // Adjust border size
         ),
       ),
     );
@@ -39,12 +44,17 @@ class _SignUpPageState extends State<SignUpPage> {
       decoration: InputDecoration(
         labelText: 'Username',
         labelStyle: const TextStyle(color: Colors.grey),
+        floatingLabelStyle: const TextStyle(color: Colors.indigoAccent),
         prefixIcon: const Icon(Icons.person, color: Colors.indigoAccent),
         filled: true,
         fillColor: Colors.white,
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+        contentPadding: const EdgeInsets.symmetric(
+            vertical: 24.0, horizontal: 16.0), // Increased vertical padding
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+              color: Colors.transparent, width: 2), // Adjust border size
         ),
       ),
     );
@@ -58,12 +68,17 @@ class _SignUpPageState extends State<SignUpPage> {
       decoration: InputDecoration(
         labelText: 'Password',
         labelStyle: const TextStyle(color: Colors.grey),
+        floatingLabelStyle: const TextStyle(color: Colors.indigoAccent),
         prefixIcon: const Icon(Icons.lock, color: Colors.indigoAccent),
         filled: true,
         fillColor: Colors.white,
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+        contentPadding: const EdgeInsets.symmetric(
+            vertical: 24.0, horizontal: 16.0), // Increased vertical padding
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+              color: Colors.transparent, width: 2), // Adjust border size
         ),
       ),
     );

@@ -41,21 +41,33 @@ class _PostCardState extends State<PostCard> {
   }
 
   void toggleLike() async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId == null) return;
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  if (userId == null) return;
 
-    final postRef = FirebaseFirestore.instance
-        .collection('posts')
-        .doc(widget.post.id);
+  final postRef = FirebaseFirestore.instance
+      .collection('posts')
+      .doc(widget.post.id);
+
+  final postSnapshot = await postRef.get();
+
+  // Ensure likeCount field exists before proceeding
+  if (postSnapshot.exists) {
+    final int currentLikeCount = postSnapshot.data()?['likeCount'] ?? 0;
+    final likedBy = List.from(postSnapshot['likedBy'] ?? []);
 
     if (isLiked) {
-      await postRef.update({
-        'likeCount': FieldValue.increment(-1),
-        'likedBy': FieldValue.arrayRemove([userId]),
-      });
+      // Ensure the likeCount doesn't go below 0
+      if (currentLikeCount > 0) {
+        await postRef.update({
+          'likeCount': FieldValue.increment(-1),
+          'likedBy': FieldValue.arrayRemove([userId]),
+        });
+      }
       setState(() {
         isLiked = false;
-        likeCount--;
+        if (likeCount > 0) {
+          likeCount--;
+        }
       });
     } else {
       await postRef.update({
@@ -68,6 +80,8 @@ class _PostCardState extends State<PostCard> {
       });
     }
   }
+}
+
 
   void sharePost() {
     Share.share(widget.post.content);  // Share the post content
